@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import HomeTable from './HomeTable';
+import { Category } from '../../model/Item';
 
-type Category =
-  | '야미'
-  | '의류미용'
-  | '쓸데 없는'
-  | '오락'
-  | '택시'
-  | '자기계발'
-  | '소비 안 함';
 interface TableRowProps {
   name: string;
   price: number;
