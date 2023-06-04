@@ -68,6 +68,7 @@ module.exports = {
     'react/no-array-index-key': 'warn',
     'react/jsx-no-literals': ['warn', {ignoreProps: true}],
     'space-in-brackets': 'off',
+    "no-unused-vars": "warn",
   },
   settings: {
     react: {
