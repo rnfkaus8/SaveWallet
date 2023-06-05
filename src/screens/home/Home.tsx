@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
+import Realm from 'realm';
 import HomeTable from './HomeTable';
-import { Category } from '../../model/Item';
+import { Category, Item } from '../../model/Item';
+import { RealmContext } from '../../model';
 
 interface TableRowProps {
   name: string;
@@ -45,6 +47,10 @@ const TableRowData: TableRowProps[] = [
 ];
 
 const Home = () => {
+  const { useRealm, useQuery } = RealmContext;
+  const realm = useRealm();
+  const itemList = useQuery(Item);
+
   const [tableHead, setTableHead] = useState(TableHeadData);
   const [tableRow, setTableRow] = useState(
     TableRowData.map((data) => {
@@ -56,6 +62,27 @@ const Home = () => {
       ];
     }),
   );
+
+  useEffect(() => {
+    console.log(itemList);
+  }, [itemList]);
+
+  const handlePressSubmit = useCallback(() => {
+    const dateString = new Date().toLocaleDateString();
+    setTableRow((prev) => {
+      return [...prev, ['컴퓨터', 1000000, '쓸데 없는', dateString]];
+    });
+    const id = new Realm.BSON.ObjectId();
+    realm.write(() => {
+      realm.create('Item', {
+        name: '컴퓨터',
+        price: '1000000',
+        category: '쓸데 없는',
+        date: dateString,
+        _id: id,
+      });
+    });
+  }, [realm]);
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
@@ -72,14 +99,7 @@ const Home = () => {
           backgroundColor: 'gray',
           justifyContent: 'center',
         }}
-        onPress={() => {
-          setTableRow((prev) => {
-            return [
-              ...prev,
-              ['컴퓨터', 1000000, '쓸데 없는', new Date().toLocaleDateString()],
-            ];
-          });
-        }}
+        onPress={handlePressSubmit}
       >
         <Text
           style={{
