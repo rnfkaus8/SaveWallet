@@ -1,5 +1,4 @@
 import Realm from 'realm';
-import { BSON } from 'bson';
 
 export type Category =
   | '야미'
@@ -10,8 +9,7 @@ export type Category =
   | '자기계발'
   | '소비 안 함';
 export class Item extends Realm.Object<Item> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  _id = new Realm.BSON.ObjectId();
+  _id: number;
 
   name: string;
 
@@ -21,20 +19,14 @@ export class Item extends Realm.Object<Item> {
 
   date: Date;
 
-  constructor(
-    realm: Realm,
-    name: string,
-    price: number,
-    category: Category,
-    date: Date,
-  ) {
-    super(realm, {
-      name,
-      price,
-      category,
-      date,
-    });
-  }
-
-  static primaryKey = '_id';
+  static schema = {
+    name: 'Item',
+    properties: {
+      _id: 'int',
+      name: 'string',
+      price: 'int',
+      date: 'date',
+    },
+    primaryKey: '_id',
+  };
 }
