@@ -68,13 +68,19 @@ const Home = () => {
   }, [itemList]);
 
   const handlePressSubmit = useCallback(() => {
-    const date = new Date();
-    const dateString = date.toLocaleDateString();
+    const dateString = new Date().toLocaleDateString();
     setTableRow((prev) => {
       return [...prev, ['컴퓨터', 1000000, '쓸데 없는', dateString]];
     });
+    const id = new Realm.BSON.ObjectId();
     realm.write(() => {
-      return new Item(realm, '컴퓨터', 10000000, '쓸데 없는', date);
+      realm.create('Item', {
+        name: '컴퓨터',
+        price: '1000000',
+        category: '쓸데 없는',
+        date: dateString,
+        _id: id,
+      });
     });
   }, [realm]);
   return (
