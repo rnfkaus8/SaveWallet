@@ -68,7 +68,8 @@ const Home = () => {
   }, [itemList]);
 
   const handlePressSubmit = useCallback(() => {
-    const dateString = new Date().toLocaleDateString();
+    const date = new Date();
+    const dateString = date.toLocaleDateString();
     setTableRow((prev) => {
       return [...prev, ['컴퓨터', 1000000, '쓸데 없는', dateString]];
     });
@@ -76,9 +77,9 @@ const Home = () => {
     realm.write(() => {
       realm.create('Item', {
         name: '컴퓨터',
-        price: '1000000',
+        price: 1000000,
         category: '쓸데 없는',
-        date: dateString,
+        date,
         _id: id,
       });
     });
