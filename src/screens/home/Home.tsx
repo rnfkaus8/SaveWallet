@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Realm from 'realm';
-import HomeTable from './HomeTable';
 import { Category, Item } from '../../model/Item';
 import { RealmContext } from '../../model';
 
@@ -52,16 +57,7 @@ const Home = () => {
   const itemList = useQuery(Item);
 
   const [tableHead, setTableHead] = useState(TableHeadData);
-  const [tableRow, setTableRow] = useState(
-    TableRowData.map((data) => {
-      return [
-        data.name,
-        data.price,
-        data.category,
-        data.date.toLocaleDateString(),
-      ];
-    }),
-  );
+  const [tableRow, setTableRow] = useState(TableRowData);
 
   useEffect(() => {
     console.log(itemList);
@@ -69,9 +65,14 @@ const Home = () => {
 
   const handlePressSubmit = useCallback(() => {
     const date = new Date();
-    const dateString = date.toLocaleDateString();
+    const addData: TableRowProps = {
+      name: '컴퓨터',
+      price: 1000000,
+      category: '쓸데 없는',
+      date,
+    };
     setTableRow((prev) => {
-      return [...prev, ['컴퓨터', 1000000, '쓸데 없는', dateString]];
+      return [...prev, addData];
     });
     const id = new Realm.BSON.ObjectId();
     realm.write(() => {
@@ -84,11 +85,42 @@ const Home = () => {
       });
     });
   }, [realm]);
+
+  const renderItem = ({ item }: { item: TableRowProps }) => {
+    return (
+      <View
+        style={{
+          borderRadius: 10,
+          flex: 1,
+          borderWidth: 2,
+          borderColor: '#000',
+          padding: 10,
+          marginBottom: 15,
+        }}
+      >
+        <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+          <Text style={{ flex: 1, textAlign: 'left' }}>{item.name}</Text>
+          <Text style={{ flex: 1, textAlign: 'right' }}>{item.price}</Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <Text style={{ flex: 1, textAlign: 'left' }}>{item.category}</Text>
+          <Text style={{ flex: 1, textAlign: 'right' }}>
+            {item.date.toLocaleDateString()}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
     >
-      <HomeTable tableHead={tableHead} tableRow={tableRow} />
+      <FlatList
+        style={{ padding: 10 }}
+        data={tableRow}
+        renderItem={renderItem}
+      />
       <TouchableOpacity
         style={{
           position: 'absolute',
