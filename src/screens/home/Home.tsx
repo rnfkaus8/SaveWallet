@@ -9,6 +9,7 @@ import {
 import Realm from 'realm';
 import { Category, Item } from '../../model/Item';
 import { RealmContext } from '../../model';
+import { itemRepository } from '../../repository';
 
 interface TableRowProps {
   name: string;
@@ -52,39 +53,16 @@ const TableRowData: TableRowProps[] = [
 ];
 
 const Home = () => {
-  const { useRealm, useQuery } = RealmContext;
-  const realm = useRealm();
-  const itemList = useQuery(Item);
-
-  const [tableHead, setTableHead] = useState(TableHeadData);
-  const [tableRow, setTableRow] = useState(TableRowData);
+  const [tableRow, setTableRow] = useState<Item[]>();
 
   useEffect(() => {
-    console.log(itemList);
-  }, [itemList]);
+    const data = itemRepository.findAll().map((val: Item) => {
+      return val;
+    });
+    setTableRow(data);
+  }, []);
 
-  const handlePressSubmit = useCallback(() => {
-    const date = new Date();
-    const addData: TableRowProps = {
-      name: '컴퓨터',
-      price: 1000000,
-      category: '쓸데 없는',
-      date,
-    };
-    setTableRow((prev) => {
-      return [...prev, addData];
-    });
-    const id = new Realm.BSON.ObjectId();
-    realm.write(() => {
-      realm.create('Item', {
-        name: '컴퓨터',
-        price: 1000000,
-        category: '쓸데 없는',
-        date,
-        _id: id,
-      });
-    });
-  }, [realm]);
+  const handlePressSubmit = useCallback(() => {}, []);
 
   const renderItem = ({ item }: { item: TableRowProps }) => {
     return (
