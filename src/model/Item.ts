@@ -1,13 +1,16 @@
 import Realm from 'realm';
 
-export type Category =
-  | '야미'
-  | '의류미용'
-  | '쓸데 없는'
-  | '오락'
-  | '택시'
-  | '자기계발'
-  | '소비 안 함';
+export const CategoryArr = [
+  '야미',
+  '의류미용',
+  '쓸데 없는',
+  '오락',
+  '택시',
+  '자기계발',
+  '소비 안 함',
+] as const;
+
+export type Category = (typeof CategoryArr)[number];
 export class Item extends Realm.Object<Item> {
   _id: Realm.BSON.ObjectId;
 
