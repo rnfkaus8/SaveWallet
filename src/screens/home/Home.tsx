@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Realm from 'realm';
 import { Category, Item } from '../../model/Item';
 import { RealmContext } from '../../model';
-import { itemRepository } from '../../repository';
+import { useNavigateToHomeTableItemForm } from './useNavigateToHomeTableItemForm';
 
 interface TableRowProps {
   name: string;
@@ -54,15 +53,20 @@ const TableRowData: TableRowProps[] = [
 
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
+  const fetchedData = RealmContext.useQuery(Item);
+
+  const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
 
   useEffect(() => {
-    const data = itemRepository.findAll().map((val: Item) => {
+    const data = fetchedData.map((val: Item) => {
       return val;
     });
     setTableRow(data);
-  }, []);
+  }, [fetchedData]);
 
-  const handlePressSubmit = useCallback(() => {}, []);
+  const handlePressSubmit = useCallback(() => {
+    navigateToHomeTableItemForm();
+  }, [navigateToHomeTableItemForm]);
 
   const renderItem = ({ item }: { item: TableRowProps }) => {
     return (
