@@ -69,6 +69,8 @@ module.exports = {
     'react/jsx-no-literals': ['warn', {ignoreProps: true}],
     'space-in-brackets': 'off',
     "no-unused-vars": "warn",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "warn",
   },
   settings: {
     react: {
