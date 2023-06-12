@@ -1,14 +1,6 @@
 import Realm from 'realm';
 
-export const CategoryArr = [
-  '야미',
-  '의류미용',
-  '쓸데 없는',
-  '오락',
-  '택시',
-  '자기계발',
-  '소비 안 함',
-] as const;
+export const CategoryArr = ['아낀 돈', '낭비한 돈'];
 
 export type Category = (typeof CategoryArr)[number];
 export class Item extends Realm.Object<Item> {
