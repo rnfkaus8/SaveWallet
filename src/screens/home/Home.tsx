@@ -17,40 +17,6 @@ interface TableRowProps {
   date: Date;
 }
 
-const TableHeadData: string[] = ['상품명', '금액', '카테고리', '날짜'];
-const TableRowData: TableRowProps[] = [
-  {
-    name: '햄버거',
-    price: 10000,
-    category: '야미',
-    date: new Date(),
-  },
-  {
-    name: '옷장',
-    price: 420000,
-    category: '의류미용',
-    date: new Date(),
-  },
-  {
-    name: '피파 현질',
-    price: 100000,
-    category: '쓸데 없는',
-    date: new Date(),
-  },
-  {
-    name: '피씨방',
-    price: 10000,
-    category: '쓸데 없는',
-    date: new Date(),
-  },
-  {
-    name: '피씨방 식사',
-    price: 12000,
-    category: '야미',
-    date: new Date(),
-  },
-];
-
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const fetchedData = RealmContext.useQuery(Item);
