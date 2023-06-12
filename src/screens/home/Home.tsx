@@ -2,10 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import styled from 'styled-components/native';
 import { Category, Item } from '../../model/Item';
 import { RealmContext } from '../../model';
 import { useNavigateToHomeTableItemForm } from './useNavigateToHomeTableItemForm';
@@ -16,6 +18,22 @@ interface TableRowProps {
   category: Category;
   date: Date;
 }
+
+const TabViewWrapper = styled.View`
+  flex-direction: row;
+`;
+
+const TabView = styled.TouchableOpacity`
+  background-color: lightgray;
+  padding: 20px;
+  flex: 1;
+  align-items: center;
+  justify-items: center;
+`;
+
+const ListWrapper = styled.View`
+  padding-bottom: 50px;
+`;
 
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
@@ -64,11 +82,23 @@ const Home = () => {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
     >
-      <FlatList
-        style={{ padding: 10 }}
-        data={tableRow}
-        renderItem={renderItem}
-      />
+      <TabViewWrapper>
+        <TabView>
+          <Text>아낀 돈!</Text>
+        </TabView>
+        <TabView>
+          <Text>낭비한 돈!</Text>
+        </TabView>
+      </TabViewWrapper>
+      <ScrollView>
+        <ListWrapper>
+          <FlatList
+            style={{ padding: 10 }}
+            data={tableRow}
+            renderItem={renderItem}
+          />
+        </ListWrapper>
+      </ScrollView>
       <TouchableOpacity
         style={{
           position: 'absolute',
