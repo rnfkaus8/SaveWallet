@@ -42,6 +42,7 @@ const HomeTableItemForm = () => {
     }),
   );
   const [open, setOpen] = useState(false);
+  const [datePrickerOpen, setDatePickerOpen] = useState(false);
   const [category, setCategory] = useState<Category>('야미');
 
   const realm = RealmContext.useRealm();
@@ -87,6 +88,31 @@ const HomeTableItemForm = () => {
           />
         </InputWrapper>
         <InputWrapper>
+          <TouchableOpacity
+            onPress={() => {
+              setDatePickerOpen((prev) => {
+                return !prev;
+              });
+            }}
+          >
+            <InputTitle>날짜</InputTitle>
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            date={date}
+            open={datePrickerOpen}
+            mode="date"
+            onConfirm={(confirmedDate) => {
+              setDatePickerOpen(false);
+              setDate(confirmedDate);
+            }}
+            onCancel={() => {
+              setDatePickerOpen(false);
+            }}
+          />
+          <InputTitle>{date.toLocaleDateString()}</InputTitle>
+        </InputWrapper>
+        <InputWrapper>
           <InputTitle>카테고리</InputTitle>
           <DropDownPicker
             setValue={setCategory}
@@ -95,9 +121,6 @@ const HomeTableItemForm = () => {
             open={open}
             setOpen={setOpen}
           />
-        </InputWrapper>
-        <InputWrapper>
-          <DatePicker date={date} onDateChange={setDate} />
         </InputWrapper>
       </Wrapper>
       <TouchableOpacity
