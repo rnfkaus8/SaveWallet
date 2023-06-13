@@ -59,13 +59,13 @@ const HomeTableItemForm = () => {
         name,
         price,
         category,
-        date: new Date(),
+        date,
         _id: new Realm.BSON.ObjectId(),
       });
     });
 
     navigateToHome();
-  }, [category, name, navigateToHome, price, realm]);
+  }, [category, date, name, navigateToHome, price, realm]);
   return (
     <SafeAreaView
       style={{
