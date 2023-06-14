@@ -37,14 +37,19 @@ const ListWrapper = styled.View`
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [selectedTab, setSelectedTab] = useState<Category>('save');
+  const [totalPrice, setTotalPrice] = useState(0);
   const fetchedData = RealmContext.useQuery(Item);
 
   const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
 
   useEffect(() => {
+    setTotalPrice(0);
     const data = fetchedData
       .filtered(`category == "${selectedTab}"`)
       .map((val: Item) => {
+        setTotalPrice((prev) => {
+          return prev + val.price;
+        });
         return val;
       });
     setTableRow(data);
@@ -109,6 +114,15 @@ const Home = () => {
             <Text>낭비한 돈!</Text>
           </TabView>
         </TabViewWrapper>
+        <View
+          style={{
+            padding: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text>총 금액 : {totalPrice}</Text>
+        </View>
         <ScrollView>
           <ListWrapper>
             <FlatList
