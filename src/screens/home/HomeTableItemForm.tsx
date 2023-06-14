@@ -38,12 +38,15 @@ const HomeTableItemForm = () => {
   const [priceStr, setPriceStr] = useState('');
   const [dropDownPickerItems, setDropDownPickerItems] = useState(
     CategoryArr.map((category) => {
-      return { label: category, value: category };
+      return {
+        label: category === 'save' ? '아낀 돈!' : '낭비한 돈!',
+        value: category,
+      };
     }),
   );
   const [open, setOpen] = useState(false);
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
-  const [category, setCategory] = useState<Category>('야미');
+  const [category, setCategory] = useState<Category>('save');
 
   const realm = RealmContext.useRealm();
   const navigateToHome = useNavigateToHome();
