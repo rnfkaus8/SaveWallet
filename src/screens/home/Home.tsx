@@ -24,7 +24,6 @@ const TabViewWrapper = styled.View`
 `;
 
 const TabView = styled.TouchableOpacity`
-  background-color: lightgray;
   padding: 20px;
   flex: 1;
   align-items: center;
@@ -37,16 +36,19 @@ const ListWrapper = styled.View`
 
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
+  const [selectedTab, setSelectedTab] = useState<Category>('save');
   const fetchedData = RealmContext.useQuery(Item);
 
   const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
 
   useEffect(() => {
-    const data = fetchedData.map((val: Item) => {
-      return val;
-    });
+    const data = fetchedData
+      .filtered(`category == "${selectedTab}"`)
+      .map((val: Item) => {
+        return val;
+      });
     setTableRow(data);
-  }, [fetchedData]);
+  }, [fetchedData, selectedTab]);
 
   const handlePressSubmit = useCallback(() => {
     navigateToHomeTableItemForm();
@@ -69,7 +71,9 @@ const Home = () => {
           <Text style={{ flex: 1, textAlign: 'right' }}>{item.price}</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Text style={{ flex: 1, textAlign: 'left' }}>{item.category}</Text>
+          <Text style={{ flex: 1, textAlign: 'left' }}>
+            {item.category === 'save' ? '아낀 돈!' : '낭비한 돈!'}
+          </Text>
           <Text style={{ flex: 1, textAlign: 'right' }}>
             {item.date.toLocaleDateString()}
           </Text>
@@ -79,52 +83,68 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
-    >
-      <TabViewWrapper>
-        <TabView>
-          <Text>아낀 돈!</Text>
-        </TabView>
-        <TabView>
-          <Text>낭비한 돈!</Text>
-        </TabView>
-      </TabViewWrapper>
-      <ScrollView>
-        <ListWrapper>
-          <FlatList
-            style={{ padding: 10 }}
-            data={tableRow}
-            renderItem={renderItem}
-          />
-        </ListWrapper>
-      </ScrollView>
-      <TouchableOpacity
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          flex: 1,
-          alignItems: 'center',
-          width: '100%',
-          height: 50,
-          backgroundColor: 'gray',
-          justifyContent: 'center',
-        }}
-        onPress={handlePressSubmit}
+    <>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
       >
-        <Text
+        <TabViewWrapper>
+          <TabView
+            onPress={() => {
+              setSelectedTab('save');
+            }}
+            style={{
+              backgroundColor: selectedTab === 'save' ? 'gray' : 'lightgray',
+            }}
+          >
+            <Text>아낀 돈!</Text>
+          </TabView>
+          <TabView
+            onPress={() => {
+              setSelectedTab('waste');
+            }}
+            style={{
+              backgroundColor: selectedTab === 'waste' ? 'gray' : 'lightgray',
+            }}
+          >
+            <Text>낭비한 돈!</Text>
+          </TabView>
+        </TabViewWrapper>
+        <ScrollView>
+          <ListWrapper>
+            <FlatList
+              style={{ padding: 10 }}
+              data={tableRow}
+              renderItem={renderItem}
+            />
+          </ListWrapper>
+        </ScrollView>
+        <TouchableOpacity
           style={{
-            textAlign: 'center',
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            height: 50,
+            backgroundColor: 'gray',
             flex: 1,
             justifyContent: 'center',
-            textAlignVertical: 'center',
-            color: 'white',
+            alignItems: 'center',
           }}
+          onPress={handlePressSubmit}
         >
-          Add Item!!!
-        </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+          <Text
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'white',
+            }}
+          >
+            Add Item!!!
+          </Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+      <SafeAreaView />
+    </>
   );
 };
 
