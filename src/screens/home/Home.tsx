@@ -131,16 +131,7 @@ const Home = () => {
           }}
           onPress={handlePressSubmit}
         >
-          <Text
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: 'white',
-            }}
-          >
-            Add Item!!!
-          </Text>
+          <Text>Add Item!!!</Text>
         </TouchableOpacity>
       </SafeAreaView>
       <SafeAreaView />

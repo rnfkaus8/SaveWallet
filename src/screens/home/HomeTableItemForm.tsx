@@ -72,19 +72,20 @@ const HomeTableItemForm = () => {
   return (
     <SafeAreaView
       style={{
-        backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: 'white',
         position: 'relative',
-        height: '100%',
       }}
     >
       <Wrapper>
         <InputWrapper>
           <InputTitle>상품명</InputTitle>
-          <Input onChangeText={setName} value={name} />
+          <Input style={{ padding: 10 }} onChangeText={setName} value={name} />
         </InputWrapper>
         <InputWrapper>
           <InputTitle>가격</InputTitle>
           <Input
+            style={{ padding: 10 }}
             keyboardType="number-pad"
             onChangeText={handleChangePrice}
             value={priceStr}
@@ -129,12 +130,13 @@ const HomeTableItemForm = () => {
       <TouchableOpacity
         style={{
           position: 'absolute',
-          bottom: 0,
+          bottom: 40,
           width: '100%',
+          height: 50,
+          backgroundColor: 'yellow',
+          flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          height: 40,
-          backgroundColor: 'yellow',
         }}
         onPress={handlePressSubmit}
       >
