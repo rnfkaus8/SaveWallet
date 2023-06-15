@@ -38,22 +38,25 @@ const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [selectedTab, setSelectedTab] = useState<Category>('save');
   const [totalPrice, setTotalPrice] = useState(0);
-  const fetchedData = RealmContext.useQuery(Item);
+  const itemLists = RealmContext.useQuery(Item);
 
   const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
 
-  useEffect(() => {
+  const fetchingData = useCallback(() => {
     setTotalPrice(0);
-    const data = fetchedData
-      .filtered(`category == "${selectedTab}"`)
-      .map((val: Item) => {
+    setTableRow(
+      itemLists.filtered(`category == "${selectedTab}"`).map((val: Item) => {
         setTotalPrice((prev) => {
           return prev + val.price;
         });
         return val;
-      });
-    setTableRow(data);
-  }, [fetchedData, selectedTab]);
+      }),
+    );
+  }, [itemLists, selectedTab]);
+
+  useEffect(() => {
+    fetchingData();
+  }, [fetchingData]);
 
   const handlePressSubmit = useCallback(() => {
     navigateToHomeTableItemForm();
