@@ -56,7 +56,7 @@ const HomeTableItemForm = () => {
     setPrice(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
 
-  const handlePressSubmit = useCallback(() => {
+  const saveItem = useCallback(() => {
     realm.write(() => {
       realm.create('Item', {
         name,
@@ -66,9 +66,13 @@ const HomeTableItemForm = () => {
         _id: new Realm.BSON.ObjectId(),
       });
     });
+  }, [category, date, name, price, realm]);
 
+  const handlePressSubmit = useCallback(() => {
+    saveItem();
     navigateToHome();
-  }, [category, date, name, navigateToHome, price, realm]);
+  }, [navigateToHome, saveItem]);
+
   return (
     <SafeAreaView
       style={{
