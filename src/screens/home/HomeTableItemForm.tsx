@@ -73,6 +73,12 @@ const HomeTableItemForm = () => {
     navigateToHome();
   }, [navigateToHome, saveItem]);
 
+  const handlePressDatePicker = useCallback(() => {
+    setDatePickerOpen((prev) => {
+      return !prev;
+    });
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -96,13 +102,7 @@ const HomeTableItemForm = () => {
           />
         </InputWrapper>
         <InputWrapper>
-          <TouchableOpacity
-            onPress={() => {
-              setDatePickerOpen((prev) => {
-                return !prev;
-              });
-            }}
-          >
+          <TouchableOpacity onPress={handlePressDatePicker}>
             <InputTitle>날짜</InputTitle>
           </TouchableOpacity>
           <DatePicker
