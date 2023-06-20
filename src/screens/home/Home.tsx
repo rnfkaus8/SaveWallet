@@ -41,6 +41,7 @@ const Home = () => {
   const [selectedTab, setSelectedTab] = useState<Category>('save');
   const [totalPrice, setTotalPrice] = useState(0);
   const itemLists = RealmContext.useQuery(Item);
+  const realm = RealmContext.useRealm();
 
   const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
 
@@ -64,11 +65,16 @@ const Home = () => {
     navigateToHomeTableItemForm();
   }, [navigateToHomeTableItemForm]);
 
-  const handlePressDelete = useCallback(() => {
-    // TODO delete item...
-  }, []);
+  const handlePressDelete = useCallback(
+    (item: Item) => {
+      realm.write(() => {
+        realm.delete(item);
+      });
+    },
+    [realm],
+  );
 
-  const renderItem = ({ item }: { item: TableRowProps }) => {
+  const renderItem = ({ item }: { item: Item }) => {
     return (
       <View
         style={{
@@ -83,7 +89,11 @@ const Home = () => {
         <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
           <Text style={{ flex: 1, textAlign: 'left' }}>{item.name}</Text>
           <Text style={{ flex: 1, textAlign: 'right' }}>{item.price}</Text>
-          <TouchableOpacity onPress={handlePressDelete}>
+          <TouchableOpacity
+            onPress={() => {
+              handlePressDelete(item);
+            }}
+          >
             <Image source={trashcan} style={{ width: 14, height: 14 }} />
           </TouchableOpacity>
         </View>
