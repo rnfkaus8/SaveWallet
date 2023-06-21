@@ -1,13 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import Realm from 'realm';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Realm, { UpdateMode } from 'realm';
+import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { RealmContext } from '../../model';
 import { useNavigateToHome } from './useNavigateToHome';
-import { AppNavigationProp } from '../../assets/navigation';
 import { HomeTableItemFormParams } from './useNavigateToHomeTableItemForm';
 
 const Wrapper = styled.View`
@@ -62,7 +61,11 @@ const HomeTableItemForm = () => {
 
   const updateItem = useCallback(() => {
     realm.write(() => {
-      realm.create('Item', { id: item!._id, name, price, date }, 'modified');
+      realm.create(
+        'Item',
+        { id: item!._id, name, price, date },
+        UpdateMode.Modified,
+      );
     });
   }, [date, item, name, price, realm]);
 
