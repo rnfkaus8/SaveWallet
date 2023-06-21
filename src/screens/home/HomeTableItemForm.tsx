@@ -2,12 +2,13 @@ import React, { useCallback, useState } from 'react';
 import Realm from 'realm';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import DropDownPicker from 'react-native-dropdown-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Category, CategoryArr } from '../../model/Item';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { RealmContext } from '../../model';
 import { useNavigateToHome } from './useNavigateToHome';
+import { AppNavigationProp } from '../../assets/navigation';
+import { HomeTableItemFormParams } from './useNavigateToHomeTableItemForm';
 
 const Wrapper = styled.View`
   padding: 40px;
@@ -32,21 +33,13 @@ const Input = styled.TextInput`
 `;
 
 const HomeTableItemForm = () => {
-  const [date, setDate] = useState<Date>(new Date());
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState(0);
-  const [priceStr, setPriceStr] = useState('');
-  const [dropDownPickerItems, setDropDownPickerItems] = useState(
-    CategoryArr.map((category) => {
-      return {
-        label: category === 'save' ? '아낀 돈!' : '낭비한 돈!',
-        value: category,
-      };
-    }),
-  );
-  const [open, setOpen] = useState(false);
+  const route = useRoute();
+  const { item } = route.params as HomeTableItemFormParams;
+  const [date, setDate] = useState<Date>(item ? item.date : new Date());
+  const [name, setName] = useState(item ? item.name : '');
+  const [price, setPrice] = useState(item ? item.price : 0);
+  const [priceStr, setPriceStr] = useState(item ? item.price.toString() : '');
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
-  const [category, setCategory] = useState<Category>('save');
 
   const realm = RealmContext.useRealm();
   const navigateToHome = useNavigateToHome();
@@ -61,17 +54,26 @@ const HomeTableItemForm = () => {
       realm.create('Item', {
         name,
         price,
-        category,
         date,
         _id: new Realm.BSON.ObjectId(),
       });
     });
-  }, [category, date, name, price, realm]);
+  }, [date, name, price, realm]);
+
+  const updateItem = useCallback(() => {
+    realm.write(() => {
+      realm.create('Item', { id: item!._id, name, price, date }, 'modified');
+    });
+  }, [date, item, name, price, realm]);
 
   const handlePressSubmit = useCallback(() => {
-    saveItem();
+    if (item) {
+      updateItem();
+    } else {
+      saveItem();
+    }
     navigateToHome();
-  }, [navigateToHome, saveItem]);
+  }, [item, navigateToHome, saveItem, updateItem]);
 
   const handlePressDatePicker = useCallback(() => {
     setDatePickerOpen((prev) => {
@@ -120,16 +122,6 @@ const HomeTableItemForm = () => {
           />
           <InputTitle>{date.toLocaleDateString()}</InputTitle>
         </InputWrapper>
-        <InputWrapper>
-          <InputTitle>카테고리</InputTitle>
-          <DropDownPicker
-            setValue={setCategory}
-            value={category}
-            items={dropDownPickerItems}
-            open={open}
-            setOpen={setOpen}
-          />
-        </InputWrapper>
       </Wrapper>
       <TouchableOpacity
         style={{
@@ -144,7 +136,7 @@ const HomeTableItemForm = () => {
         }}
         onPress={handlePressSubmit}
       >
-        <Text>Submit!!</Text>
+        <Text>{item ? 'Update!!' : 'Submit!!'}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
