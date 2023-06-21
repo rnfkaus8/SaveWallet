@@ -9,15 +9,14 @@ import {
   View,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { Category, Item } from '../../model/Item';
+import { Item } from '../../model/Item';
 import { RealmContext } from '../../model';
 import { useNavigateToHomeTableItemForm } from './useNavigateToHomeTableItemForm';
-import { trashcan } from '../../assets/resources/images';
+import { edit, trashcan } from '../../assets/resources/images';
 
 interface TableRowProps {
   name: string;
   price: number;
-  category: Category;
   date: Date;
 }
 
@@ -38,7 +37,6 @@ const ListWrapper = styled.View`
 
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
-  const [selectedTab, setSelectedTab] = useState<Category>('save');
   const [totalPrice, setTotalPrice] = useState(0);
   const itemLists = RealmContext.useQuery(Item);
   const realm = RealmContext.useRealm();
@@ -48,21 +46,21 @@ const Home = () => {
   const fetchingData = useCallback(() => {
     setTotalPrice(0);
     setTableRow(
-      itemLists.filtered(`category == "${selectedTab}"`).map((val: Item) => {
+      itemLists.map((val: Item) => {
         setTotalPrice((prev) => {
           return prev + val.price;
         });
         return val;
       }),
     );
-  }, [itemLists, selectedTab]);
+  }, [itemLists]);
 
   useEffect(() => {
     fetchingData();
   }, [fetchingData]);
 
   const handlePressSubmit = useCallback(() => {
-    navigateToHomeTableItemForm();
+    navigateToHomeTableItemForm({});
   }, [navigateToHomeTableItemForm]);
 
   const handlePressDelete = useCallback(
@@ -72,6 +70,13 @@ const Home = () => {
       });
     },
     [realm],
+  );
+
+  const handlePressEdit = useCallback(
+    (item: Item) => {
+      navigateToHomeTableItemForm({ item });
+    },
+    [navigateToHomeTableItemForm],
   );
 
   const renderItem = ({ item }: { item: Item }) => {
@@ -96,11 +101,15 @@ const Home = () => {
           >
             <Image source={trashcan} style={{ width: 14, height: 14 }} />
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              handlePressEdit(item);
+            }}
+          >
+            <Image source={edit} style={{ width: 14, height: 14 }} />
+          </TouchableOpacity>
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Text style={{ flex: 1, textAlign: 'left' }}>
-            {item.category === 'save' ? '아낀 돈!' : '낭비한 돈!'}
-          </Text>
           <Text style={{ flex: 1, textAlign: 'right' }}>
             {item.date.toLocaleDateString()}
           </Text>
@@ -114,28 +123,6 @@ const Home = () => {
       <SafeAreaView
         style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
       >
-        <TabViewWrapper>
-          <TabView
-            onPress={() => {
-              setSelectedTab('save');
-            }}
-            style={{
-              backgroundColor: selectedTab === 'save' ? 'gray' : 'lightgray',
-            }}
-          >
-            <Text>아낀 돈!</Text>
-          </TabView>
-          <TabView
-            onPress={() => {
-              setSelectedTab('waste');
-            }}
-            style={{
-              backgroundColor: selectedTab === 'waste' ? 'gray' : 'lightgray',
-            }}
-          >
-            <Text>낭비한 돈!</Text>
-          </TabView>
-        </TabViewWrapper>
         <View
           style={{
             padding: 20,
