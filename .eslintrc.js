@@ -58,7 +58,7 @@ module.exports = {
     'react/function-component-definition': 'off',
     'arrow-body-style': ['error', 'always'],
 
-    'react/jsx-filename-extension': ['warn', {extensions: ['.ts', '.tsx']}],
+    'react/jsx-filename-extension': ['warn', { extensions: ['.ts', '.tsx'] }],
     'react/prop-types': 'off',
     'react/jsx-wrap-multilines': 'off',
     'react/jsx-props-no-spreading': 'off',
@@ -66,11 +66,11 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/no-unused-prop-types': 'warn',
     'react/no-array-index-key': 'warn',
-    'react/jsx-no-literals': ['warn', {ignoreProps: true}],
+    'react/jsx-no-literals': ['warn', { ignoreProps: true }],
     'space-in-brackets': 'off',
-    "no-unused-vars": "warn",
-    "no-shadow": "off",
-    "@typescript-eslint/no-shadow": "warn",
+    'no-unused-vars': 'warn',
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'warn',
   },
   settings: {
     react: {
