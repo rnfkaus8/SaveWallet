@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import { Item } from '../../model/Item';
-import { RealmContext } from '../../model';
 import { useNavigateToHomeTableItemForm } from './useNavigateToHomeTableItemForm';
 import { edit, trashcan } from '../../assets/resources/images';
+import RealmContext from '../../model';
+import { useNavigateToHomeTableItemUpdateForm } from './useNavigateToHomeTableItemUpdateForm';
 
 interface TableRowProps {
   name: string;
@@ -42,6 +43,8 @@ const Home = () => {
   const realm = RealmContext.useRealm();
 
   const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
+  const navigateToHomeTableItemUpdateForm =
+    useNavigateToHomeTableItemUpdateForm();
 
   const fetchingData = useCallback(() => {
     setTotalPrice(0);
@@ -60,7 +63,7 @@ const Home = () => {
   }, [fetchingData]);
 
   const handlePressSubmit = useCallback(() => {
-    navigateToHomeTableItemForm({});
+    navigateToHomeTableItemForm();
   }, [navigateToHomeTableItemForm]);
 
   const handlePressDelete = useCallback(
@@ -68,15 +71,16 @@ const Home = () => {
       realm.write(() => {
         realm.delete(item);
       });
+      fetchingData();
     },
-    [realm],
+    [fetchingData, realm],
   );
 
   const handlePressEdit = useCallback(
     (item: Item) => {
-      navigateToHomeTableItemForm({ item });
+      navigateToHomeTableItemUpdateForm({ itemId: item._id });
     },
-    [navigateToHomeTableItemForm],
+    [navigateToHomeTableItemUpdateForm],
   );
 
   const renderItem = ({ item }: { item: Item }) => {

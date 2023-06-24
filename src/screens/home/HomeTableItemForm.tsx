@@ -1,13 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import Realm, { UpdateMode } from 'realm';
+import Realm from 'realm';
 import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
-import { RealmContext } from '../../model';
 import { useNavigateToHome } from './useNavigateToHome';
-import { HomeTableItemFormParams } from './useNavigateToHomeTableItemForm';
+import RealmContext from '../../model';
 
 const Wrapper = styled.View`
   padding: 40px;
@@ -32,12 +30,10 @@ const Input = styled.TextInput`
 `;
 
 const HomeTableItemForm = () => {
-  const route = useRoute();
-  const { item } = route.params as HomeTableItemFormParams;
-  const [date, setDate] = useState<Date>(item ? item.date : new Date());
-  const [name, setName] = useState(item ? item.name : '');
-  const [price, setPrice] = useState(item ? item.price : 0);
-  const [priceStr, setPriceStr] = useState(item ? item.price.toString() : '');
+  const [date, setDate] = useState<Date>(new Date());
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(0);
+  const [priceStr, setPriceStr] = useState('');
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
   const realm = RealmContext.useRealm();
@@ -59,24 +55,10 @@ const HomeTableItemForm = () => {
     });
   }, [date, name, price, realm]);
 
-  const updateItem = useCallback(() => {
-    realm.write(() => {
-      realm.create(
-        'Item',
-        { id: item!._id, name, price, date },
-        UpdateMode.Modified,
-      );
-    });
-  }, [date, item, name, price, realm]);
-
   const handlePressSubmit = useCallback(() => {
-    if (item) {
-      updateItem();
-    } else {
-      saveItem();
-    }
+    saveItem();
     navigateToHome();
-  }, [item, navigateToHome, saveItem, updateItem]);
+  }, [navigateToHome, saveItem]);
 
   const handlePressDatePicker = useCallback(() => {
     setDatePickerOpen((prev) => {
@@ -139,7 +121,7 @@ const HomeTableItemForm = () => {
         }}
         onPress={handlePressSubmit}
       >
-        <Text>{item ? 'Update!!' : 'Submit!!'}</Text>
+        <Text>Submit!!</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
