@@ -7,6 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigateToHome } from './useNavigateToHome';
 import RealmContext from '../../model';
 
+interface HomeTableItemFormProps {
+  onPressSubmit: () => void;
+}
+
 const Wrapper = styled.View`
   padding: 40px;
 `;
@@ -29,7 +33,9 @@ const Input = styled.TextInput`
   border-color: #000;
 `;
 
-const HomeTableItemForm = () => {
+const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
+  onPressSubmit,
+}) => {
   const [date, setDate] = useState<Date>(new Date());
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
@@ -57,8 +63,8 @@ const HomeTableItemForm = () => {
 
   const handlePressSubmit = useCallback(() => {
     saveItem();
-    navigateToHome();
-  }, [navigateToHome, saveItem]);
+    onPressSubmit();
+  }, [saveItem, onPressSubmit]);
 
   const handlePressDatePicker = useCallback(() => {
     setDatePickerOpen((prev) => {
@@ -69,9 +75,7 @@ const HomeTableItemForm = () => {
   return (
     <SafeAreaView
       style={{
-        flex: 1,
         backgroundColor: 'white',
-        position: 'relative',
       }}
     >
       <Wrapper>
@@ -107,22 +111,19 @@ const HomeTableItemForm = () => {
           />
           <InputTitle>{date.toLocaleDateString()}</InputTitle>
         </InputWrapper>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: 'yellow',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={handlePressSubmit}
+        >
+          <Text>Submit!!</Text>
+        </TouchableOpacity>
       </Wrapper>
-      <TouchableOpacity
-        style={{
-          position: 'absolute',
-          bottom: 40,
-          width: '100%',
-          height: 50,
-          backgroundColor: 'yellow',
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={handlePressSubmit}
-      >
-        <Text>Submit!!</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

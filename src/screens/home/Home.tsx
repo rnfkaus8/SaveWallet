@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   FlatList,
   Image,
@@ -7,30 +13,20 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
+  Button,
 } from 'react-native';
 import styled from 'styled-components/native';
+import BottomSheet, {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
 import { Item } from '../../model/Item';
 import { useNavigateToHomeTableItemForm } from './useNavigateToHomeTableItemForm';
 import { edit, trashcan } from '../../assets/resources/images';
 import RealmContext from '../../model';
 import { useNavigateToHomeTableItemUpdateForm } from './useNavigateToHomeTableItemUpdateForm';
-
-interface TableRowProps {
-  name: string;
-  price: number;
-  date: Date;
-}
-
-const TabViewWrapper = styled.View`
-  flex-direction: row;
-`;
-
-const TabView = styled.TouchableOpacity`
-  padding: 20px;
-  flex: 1;
-  align-items: center;
-  justify-items: center;
-`;
+import HomeTableItemForm from './HomeTableItemForm';
 
 const ListWrapper = styled.View`
   padding-bottom: 50px;
@@ -41,6 +37,15 @@ const Home = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const itemLists = RealmContext.useQuery(Item);
   const realm = RealmContext.useRealm();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => {
+    return ['25%', '50%'];
+  }, []);
+  const handlePresentModalPress = useCallback(() => {}, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
   const navigateToHomeTableItemUpdateForm =
@@ -62,9 +67,10 @@ const Home = () => {
     fetchingData();
   }, [fetchingData]);
 
-  const handlePressSubmit = useCallback(() => {
-    navigateToHomeTableItemForm();
-  }, [navigateToHomeTableItemForm]);
+  const handlePressAddItem = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+    // navigateToHomeTableItemForm();
+  }, []);
 
   const handlePressDelete = useCallback(
     (item: Item) => {
@@ -82,6 +88,10 @@ const Home = () => {
     },
     [navigateToHomeTableItemUpdateForm],
   );
+
+  const handlePressSubmit = useCallback(() => {
+    bottomSheetModalRef.current?.dismiss();
+  }, []);
 
   const renderItem = ({ item }: { item: Item }) => {
     return (
@@ -123,7 +133,7 @@ const Home = () => {
   };
 
   return (
-    <>
+    <BottomSheetModalProvider>
       <SafeAreaView
         style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
       >
@@ -156,13 +166,20 @@ const Home = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}
-          onPress={handlePressSubmit}
+          onPress={handlePressAddItem}
         >
           <Text>Add Item!!!</Text>
         </TouchableOpacity>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+        >
+          <HomeTableItemForm onPressSubmit={handlePressSubmit} />
+        </BottomSheetModal>
       </SafeAreaView>
-      <SafeAreaView />
-    </>
+    </BottomSheetModalProvider>
   );
 };
 
