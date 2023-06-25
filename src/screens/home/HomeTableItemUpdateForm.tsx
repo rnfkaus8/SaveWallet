@@ -74,7 +74,7 @@ const HomeTableItemUpdateForm = () => {
   const handlePressSubmit = useCallback(() => {
     updateItem();
     navigateToHome();
-  }, [item, navigateToHome, saveItem, updateItem]);
+  }, [navigateToHome, updateItem]);
 
   const handlePressDatePicker = useCallback(() => {
     setDatePickerOpen((prev) => {

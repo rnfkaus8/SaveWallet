@@ -42,12 +42,7 @@ const Home = () => {
   const snapPoints = useMemo(() => {
     return ['25%', '50%'];
   }, []);
-  const handlePresentModalPress = useCallback(() => {}, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
 
-  const navigateToHomeTableItemForm = useNavigateToHomeTableItemForm();
   const navigateToHomeTableItemUpdateForm =
     useNavigateToHomeTableItemUpdateForm();
 
@@ -69,7 +64,6 @@ const Home = () => {
 
   const handlePressAddItem = useCallback(() => {
     bottomSheetModalRef.current?.present();
-    // navigateToHomeTableItemForm();
   }, []);
 
   const handlePressDelete = useCallback(
@@ -174,7 +168,6 @@ const Home = () => {
           ref={bottomSheetModalRef}
           index={1}
           snapPoints={snapPoints}
-          onChange={handleSheetChanges}
         >
           <HomeTableItemForm onPressSubmit={handlePressSubmit} />
         </BottomSheetModal>
