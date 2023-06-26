@@ -71,6 +71,7 @@ module.exports = {
     'no-unused-vars': 'warn',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'warn',
+    '@typescript-eslint/no-unsafe-call' : 'off'
   },
   settings: {
     react: {
