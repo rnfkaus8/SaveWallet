@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Realm, { UpdateMode } from 'realm';
+import React, { useCallback, useState } from 'react';
+import Realm from 'realm';
 import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
@@ -35,6 +35,7 @@ const Input = styled.TextInput`
 const HomeTableItemUpdateForm = () => {
   const route = useRoute();
   const { itemId } = route.params as HomeTableItemUpdateFormParams;
+
   const item: Item = RealmContext.useObject(Item, itemId);
   const [date, setDate] = useState<Date>(item.date);
   const [name, setName] = useState<string>(item.name);

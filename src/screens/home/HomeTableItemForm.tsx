@@ -4,7 +4,6 @@ import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigateToHome } from './useNavigateToHome';
 import RealmContext from '../../model';
 
 interface HomeTableItemFormProps {
@@ -43,7 +42,6 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
   const realm = RealmContext.useRealm();
-  const navigateToHome = useNavigateToHome();
 
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
