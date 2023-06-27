@@ -35,10 +35,12 @@ const ListWrapper = styled.View`
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [totalPrice, setTotalPrice] = useState(0);
+  const [item, setItem] = useState<Item | null>(null);
   const itemLists = RealmContext.useQuery(Item);
   const realm = RealmContext.useRealm();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const bottomSheetUpdateModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => {
     return ['25%', '50%'];
   }, []);
@@ -76,6 +78,13 @@ const Home = () => {
     [fetchingData, realm],
   );
 
+  // const handlePressEdit = useCallback(
+  //   (item: Item) => {
+  //     // eslint-disable-next-line no-underscore-dangle
+  //     navigateToHomeTableItemUpdateForm({ itemId: item._id });
+  //   },
+  //   [navigateToHomeTableItemUpdateForm],
+  // );
   const handlePressEdit = useCallback(
     (item: Item) => {
       navigateToHomeTableItemUpdateForm({ itemId: item._id });
@@ -89,7 +98,7 @@ const Home = () => {
 
   const renderItem = ({ item }: { item: Item }) => {
     return (
-      <View
+      <TouchableOpacity
         style={{
           borderRadius: 10,
           flex: 1,
@@ -97,6 +106,9 @@ const Home = () => {
           borderColor: '#000',
           padding: 10,
           marginBottom: 15,
+        }}
+        onPress={() => {
+          setItem(item);
         }}
       >
         <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
@@ -111,7 +123,8 @@ const Home = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              handlePressEdit(item);
+              bottomSheetUpdateModalRef.current?.present();
+              // handlePressEdit(item);
             }}
           >
             <Image source={edit} style={{ width: 14, height: 14 }} />
@@ -122,7 +135,7 @@ const Home = () => {
             {item.date.toLocaleDateString()}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -169,7 +182,14 @@ const Home = () => {
           index={1}
           snapPoints={snapPoints}
         >
-          <HomeTableItemForm onPressSubmit={handlePressSubmit} />
+          <HomeTableItemForm item={null} onPressSubmit={handlePressSubmit} />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={bottomSheetUpdateModalRef}
+          index={1}
+          snapPoints={snapPoints}
+        >
+          <HomeTableItemForm item={item} onPressSubmit={handlePressSubmit} />
         </BottomSheetModal>
       </SafeAreaView>
     </BottomSheetModalProvider>

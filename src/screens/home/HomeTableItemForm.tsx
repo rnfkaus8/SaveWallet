@@ -1,13 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Realm from 'realm';
 import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RealmContext from '../../model';
+import { Item } from '../../model/Item';
 
 interface HomeTableItemFormProps {
   onPressSubmit: () => void;
+  item: Item | null;
 }
 
 const Wrapper = styled.View`
@@ -34,6 +36,7 @@ const Input = styled.TextInput`
 
 const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   onPressSubmit,
+  item,
 }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [name, setName] = useState('');
@@ -42,6 +45,10 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
   const realm = RealmContext.useRealm();
+
+  useEffect(() => {
+    console.log(item);
+  }, [item]);
 
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
