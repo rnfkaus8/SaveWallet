@@ -13,16 +13,13 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TextInput,
-  Button,
 } from 'react-native';
 import styled from 'styled-components/native';
-import BottomSheet, {
+import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
 import { Item } from '../../model/Item';
-import { useNavigateToHomeTableItemForm } from './useNavigateToHomeTableItemForm';
 import { edit, trashcan } from '../../assets/resources/images';
 import RealmContext from '../../model';
 import { useNavigateToHomeTableItemUpdateForm } from './useNavigateToHomeTableItemUpdateForm';
