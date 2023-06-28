@@ -46,10 +46,6 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
 
   const realm = RealmContext.useRealm();
 
-  useEffect(() => {
-    console.log(item);
-  }, [item]);
-
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
     setPrice(parseInt(text.replace(/[^0-9]/g, ''), 10));
