@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Realm from 'realm';
 import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
@@ -7,7 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute } from '@react-navigation/native';
 import { useNavigateToHome } from './useNavigateToHome';
 import { Item } from '../../model/Item';
-import { HomeTableItemUpdateFormParams } from './useNavigateToHomeTableItemUpdateForm';
 import RealmContext from '../../model';
 
 const Wrapper = styled.View`
@@ -32,35 +31,35 @@ const Input = styled.TextInput`
   border-color: #000;
 `;
 
-const HomeTableItemUpdateForm = () => {
-  const route = useRoute();
-  const { itemId } = route.params as HomeTableItemUpdateFormParams;
+interface HomeTableItemUpdateFormProps {
+  item: Item | null;
+  onPressEdit: () => void;
+}
 
-  const item: Item = RealmContext.useObject(Item, itemId);
-  const [date, setDate] = useState<Date>(item.date);
-  const [name, setName] = useState<string>(item.name);
-  const [price, setPrice] = useState<number>(item.price);
-  const [priceStr, setPriceStr] = useState<string>(item.price.toString());
+const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
+  item,
+  onPressEdit,
+}) => {
+  // const item: Item = RealmContext.useObject(Item, itemId);
+  const [date, setDate] = useState<Date>(item ? item.date : new Date());
+  const [name, setName] = useState<string>(item ? item.name : '');
+  const [price, setPrice] = useState<number>(item ? item.price : 0);
+  const [priceStr, setPriceStr] = useState<string>(
+    item ? item.price.toString() : '0',
+  );
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
   const realm = RealmContext.useRealm();
   const navigateToHome = useNavigateToHome();
 
+  useEffect(() => {
+    console.log(item);
+  }, [item]);
+
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
     setPrice(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
-
-  const saveItem = useCallback(() => {
-    realm.write(() => {
-      realm.create('Item', {
-        name,
-        price,
-        date,
-        _id: new Realm.BSON.ObjectId(),
-      });
-    });
-  }, [date, name, price, realm]);
 
   const updateItem = useCallback(() => {
     if (item) {
@@ -74,8 +73,8 @@ const HomeTableItemUpdateForm = () => {
 
   const handlePressSubmit = useCallback(() => {
     updateItem();
-    navigateToHome();
-  }, [navigateToHome, updateItem]);
+    onPressEdit();
+  }, [onPressEdit, updateItem]);
 
   const handlePressDatePicker = useCallback(() => {
     setDatePickerOpen((prev) => {
