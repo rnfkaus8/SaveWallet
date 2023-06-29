@@ -8,6 +8,7 @@ import React, {
 import {
   FlatList,
   Image,
+  ListRenderItemInfo,
   SafeAreaView,
   ScrollView,
   Text,
@@ -27,12 +28,12 @@ import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 
 const ListWrapper = styled.View`
+  flex: 1;
   padding-bottom: 50px;
 `;
 
 const RowWrapper = styled.TouchableOpacity`
   border-radius: 10px;
-  flex: 1;
   border-width: 2px;
   border-color: #000;
   padding: 10px;
@@ -43,6 +44,17 @@ const RowWrapper = styled.TouchableOpacity`
 const Row = styled.View`
   flex: 1;
   flex-direction: row;
+`;
+
+const ToggleWrapper = styled.View`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: white;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px;
 `;
 
 const Home = () => {
@@ -78,6 +90,10 @@ const Home = () => {
     bottomSheetModalRef.current?.present();
   }, []);
 
+  const handlePressEditItem = useCallback(() => {
+    bottomSheetUpdateModalRef.current?.present();
+  }, []);
+
   const handlePressDelete = useCallback(
     (item: Item) => {
       realm.write(() => {
@@ -97,12 +113,14 @@ const Home = () => {
   }, []);
 
   const renderItem = useCallback(
-    ({ item }: { item: Item }) => {
+    ({ item }: ListRenderItemInfo<Item>) => {
+      const isSelectedItem =
+        selectedItem?._id.toString() === item._id.toString();
       return (
         <RowWrapper
           onPress={() => {
             bottomSheetUpdateModalRef.current?.dismiss();
-            if (selectedItem?._id.toString() === item._id.toString()) {
+            if (isSelectedItem) {
               setSelectedItem(null);
               return;
             }
@@ -119,20 +137,9 @@ const Home = () => {
               {item.date.toLocaleDateString()}
             </Text>
           </Row>
-          <View
+          <ToggleWrapper
             style={{
-              position: 'absolute',
-              top: 20,
-              right: 20,
-              backgroundColor: 'white',
-              borderColor: 'black',
-              borderWidth: 1,
-              borderRadius: 5,
-              padding: 10,
-              display:
-                selectedItem?._id.toString() === item._id.toString()
-                  ? 'flex'
-                  : 'none',
+              display: isSelectedItem ? 'flex' : 'none',
             }}
           >
             <TouchableOpacity
@@ -146,18 +153,16 @@ const Home = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ flexDirection: 'row' }}
-              onPress={() => {
-                bottomSheetUpdateModalRef.current?.present();
-              }}
+              onPress={handlePressEditItem}
             >
               <Image source={edit} style={{ width: 14, height: 14 }} />
               <Text>수정하기</Text>
             </TouchableOpacity>
-          </View>
+          </ToggleWrapper>
         </RowWrapper>
       );
     },
-    [handlePressDelete, selectedItem?._id],
+    [handlePressDelete, handlePressEditItem, selectedItem?._id],
   );
 
   return (
@@ -177,18 +182,16 @@ const Home = () => {
         >
           <Text>총 금액 : {totalPrice}</Text>
         </View>
-        <ScrollView>
-          <ListWrapper>
-            <FlatList
-              keyExtractor={(item, index) => {
-                return `${item._id.toString()}_${index}`;
-              }}
-              style={{ padding: 10 }}
-              data={tableRow}
-              renderItem={renderItem}
-            />
-          </ListWrapper>
-        </ScrollView>
+        <ListWrapper>
+          <FlatList
+            keyExtractor={(item, index) => {
+              return `${item._id.toString()}_${index}`;
+            }}
+            style={{ padding: 10 }}
+            data={tableRow}
+            renderItem={renderItem}
+          />
+        </ListWrapper>
         <TouchableOpacity
           style={{
             position: 'absolute',
