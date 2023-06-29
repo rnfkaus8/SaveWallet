@@ -9,7 +9,6 @@ import { Item } from '../../model/Item';
 
 interface HomeTableItemFormProps {
   onPressSubmit: () => void;
-  item: Item | null;
 }
 
 const Wrapper = styled.View`
@@ -36,7 +35,6 @@ const Input = styled.TextInput`
 
 const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   onPressSubmit,
-  item,
 }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [name, setName] = useState('');
@@ -45,10 +43,6 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
   const realm = RealmContext.useRealm();
-
-  useEffect(() => {
-    console.log(item);
-  }, [item]);
 
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
