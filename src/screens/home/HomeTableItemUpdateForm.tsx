@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Realm from 'realm';
+import React, { useCallback, useState } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
-import { useNavigateToHome } from './useNavigateToHome';
 import { Item } from '../../model/Item';
 import RealmContext from '../../model';
 
@@ -50,11 +47,6 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
   const realm = RealmContext.useRealm();
-  const navigateToHome = useNavigateToHome();
-
-  useEffect(() => {
-    console.log(item);
-  }, [item]);
 
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
@@ -123,22 +115,19 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
           />
           <InputTitle>{date.toLocaleDateString()}</InputTitle>
         </InputWrapper>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: 'yellow',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={handlePressSubmit}
+        >
+          <Text>Update!!</Text>
+        </TouchableOpacity>
       </Wrapper>
-      <TouchableOpacity
-        style={{
-          position: 'absolute',
-          bottom: 40,
-          width: '100%',
-          height: 50,
-          backgroundColor: 'yellow',
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={handlePressSubmit}
-      >
-        <Text>Update!!</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
