@@ -112,6 +112,18 @@ const Home = () => {
     bottomSheetUpdateModalRef.current?.dismiss();
   }, []);
 
+  const handlePressItemRow = useCallback(
+    (isSelectedItem: boolean, item: Item) => {
+      bottomSheetUpdateModalRef.current?.dismiss();
+      if (isSelectedItem) {
+        setSelectedItem(null);
+        return;
+      }
+      setSelectedItem(item);
+    },
+    [],
+  );
+
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<Item>) => {
       const isSelectedItem =
@@ -119,12 +131,7 @@ const Home = () => {
       return (
         <RowWrapper
           onPress={() => {
-            bottomSheetUpdateModalRef.current?.dismiss();
-            if (isSelectedItem) {
-              setSelectedItem(null);
-              return;
-            }
-            setSelectedItem(item);
+            handlePressItemRow(isSelectedItem, item);
           }}
         >
           <Row>
