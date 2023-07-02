@@ -20,6 +20,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
+import { endOfMonth, startOfMonth } from 'date-fns';
+import { Results } from 'realm';
 import { Item } from '../../model/Item';
 import { edit, trashcan } from '../../assets/resources/images';
 import RealmContext from '../../model';
@@ -72,6 +74,17 @@ const Home = () => {
 
   const fetchingData = useCallback(() => {
     setTotalPrice(0);
+
+    const filteredData: Results<Item> = itemLists.filtered(
+      'date between { $0, $1 }',
+      startOfMonth(new Date()),
+      endOfMonth(new Date()),
+    );
+
+    filteredData.map((item) => {
+      console.log(item);
+    });
+
     setTableRow(
       itemLists.map((val: Item) => {
         setTotalPrice((prev) => {
