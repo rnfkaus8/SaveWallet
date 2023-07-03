@@ -22,6 +22,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Results } from 'realm';
+import MonthPicker, { EventTypes } from 'react-native-month-year-picker';
+import moment from 'moment';
 import { Item } from '../../model/Item';
 import { edit, trashcan } from '../../assets/resources/images';
 import RealmContext from '../../model';
@@ -63,6 +65,8 @@ const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [date, setDate] = useState<Date>(new Date());
+  const [isOpenMonthPicker, setIsOpenMonthPicker] = useState(false);
   const itemLists = RealmContext.useQuery(Item);
   const realm = RealmContext.useRealm();
 
@@ -77,23 +81,19 @@ const Home = () => {
 
     const filteredData: Results<Item> = itemLists.filtered(
       'date between { $0, $1 }',
-      startOfMonth(new Date()),
-      endOfMonth(new Date()),
+      startOfMonth(date),
+      endOfMonth(date),
     );
 
-    filteredData.map((item) => {
-      console.log(item);
-    });
-
     setTableRow(
-      itemLists.map((val: Item) => {
+      filteredData.map((val: Item) => {
         setTotalPrice((prev) => {
           return prev + val.price;
         });
         return val;
       }),
     );
-  }, [itemLists]);
+  }, [date, itemLists]);
 
   useEffect(() => {
     fetchingData();
@@ -182,7 +182,26 @@ const Home = () => {
         </RowWrapper>
       );
     },
-    [handlePressDelete, handlePressEditItem, selectedItem?._id],
+    [
+      handlePressDelete,
+      handlePressEditItem,
+      handlePressItemRow,
+      selectedItem?._id,
+    ],
+  );
+
+  const handlePressMonthPicker = useCallback(() => {
+    setIsOpenMonthPicker((prev) => {
+      return !prev;
+    });
+  }, []);
+
+  const handleChangeMonthDate = useCallback(
+    (event: EventTypes, newDate: Date) => {
+      setDate(newDate);
+      setIsOpenMonthPicker(false);
+    },
+    [],
   );
 
   return (
@@ -190,6 +209,16 @@ const Home = () => {
       <SafeAreaView
         style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
       >
+        <TouchableOpacity onPress={handlePressMonthPicker}>
+          <Text style={{ fontSize: 15 }}>{moment(date).format('MM-YYYY')}</Text>
+        </TouchableOpacity>
+        {isOpenMonthPicker && (
+          <MonthPicker
+            value={date}
+            onChange={handleChangeMonthDate}
+            locale="ko"
+          />
+        )}
         <View
           style={{
             paddingTop: 20,
