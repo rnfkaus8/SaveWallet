@@ -61,6 +61,18 @@ const ToggleWrapper = styled.View`
   padding: 10px;
 `;
 
+const Wrapper = styled.SafeAreaView`
+  flex: 1;
+  background-color: white;
+  position: relative;
+`;
+
+const TotalPriceWrapper = styled.View`
+  padding: 20px 40px;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -206,9 +218,7 @@ const Home = () => {
 
   return (
     <BottomSheetModalProvider>
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}
-      >
+      <Wrapper>
         <TouchableOpacity onPress={handlePressMonthPicker}>
           <Text style={{ fontSize: 15 }}>{moment(date).format('MM-YYYY')}</Text>
         </TouchableOpacity>
@@ -219,18 +229,9 @@ const Home = () => {
             locale="ko"
           />
         )}
-        <View
-          style={{
-            paddingTop: 20,
-            paddingBottom: 20,
-            paddingRight: 40,
-            paddingLeft: 40,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+        <TotalPriceWrapper>
           <Text>총 금액 : {totalPrice}</Text>
-        </View>
+        </TotalPriceWrapper>
         <ListWrapper>
           <FlatList
             keyExtractor={(item, index) => {
@@ -273,7 +274,7 @@ const Home = () => {
             item={selectedItem}
           />
         </BottomSheetModal>
-      </SafeAreaView>
+      </Wrapper>
     </BottomSheetModalProvider>
   );
 };
