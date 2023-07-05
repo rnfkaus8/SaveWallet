@@ -73,6 +73,17 @@ const TotalPriceWrapper = styled.View`
   align-items: center;
 `;
 
+const AddItemButton = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: gray;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -242,21 +253,9 @@ const Home = () => {
             renderItem={renderItem}
           />
         </ListWrapper>
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-            height: 50,
-            backgroundColor: 'gray',
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={handlePressAddItem}
-        >
+        <AddItemButton onPress={handlePressAddItem}>
           <Text>Add Item!!!</Text>
-        </TouchableOpacity>
+        </AddItemButton>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={1}
