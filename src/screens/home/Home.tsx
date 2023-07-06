@@ -230,8 +230,11 @@ const Home = () => {
   return (
     <BottomSheetModalProvider>
       <Wrapper>
-        <TouchableOpacity onPress={handlePressMonthPicker}>
-          <Text style={{ fontSize: 15 }}>{moment(date).format('MM-YYYY')}</Text>
+        <TouchableOpacity
+          style={{ flex: 1, padding: 20, alignItems: 'center' }}
+          onPress={handlePressMonthPicker}
+        >
+          <Text style={{ fontSize: 20 }}>{moment(date).format('MM-YYYY')}</Text>
         </TouchableOpacity>
         {isOpenMonthPicker && (
           <MonthPicker
