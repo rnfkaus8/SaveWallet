@@ -31,6 +31,7 @@ import RealmContext from '../../model';
 import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
+import { GoalForm } from './GoalForm';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -96,6 +97,7 @@ const Home = () => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const bottomSheetUpdateModalRef = useRef<BottomSheetModal>(null);
+  const bottomSheetGoalModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => {
     return ['25%', '50%'];
   }, []);
@@ -279,6 +281,15 @@ const Home = () => {
               onPressEdit={handlePressEdit}
               item={selectedItem}
             />
+          </BottomSheetModal>
+        </KeyboardAvoidingView>
+        <KeyboardAvoidingView>
+          <BottomSheetModal
+            snapPoints={snapPoints}
+            ref={bottomSheetGoalModalRef}
+            index={1}
+          >
+            <GoalForm />
           </BottomSheetModal>
         </KeyboardAvoidingView>
       </Wrapper>
