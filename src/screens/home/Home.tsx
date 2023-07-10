@@ -10,11 +10,8 @@ import {
   Image,
   KeyboardAvoidingView,
   ListRenderItemInfo,
-  SafeAreaView,
-  ScrollView,
   Text,
   TouchableOpacity,
-  View,
 } from 'react-native';
 import styled from 'styled-components/native';
 import {
@@ -217,24 +214,22 @@ const Home = () => {
   );
 
   const handlePressMonthPicker = useCallback(() => {
-    setIsOpenMonthPicker((prev) => {
-      return !prev;
-    });
+    setIsOpenMonthPicker(true);
   }, []);
 
   const handleChangeMonthDate = useCallback(
     (event: EventTypes, newDate: Date) => {
-      setDate(newDate);
       setIsOpenMonthPicker(false);
+      setDate(newDate || date);
     },
-    [],
+    [date],
   );
 
   return (
     <BottomSheetModalProvider>
       <Wrapper>
         <TouchableOpacity
-          style={{ flex: 1, padding: 20, alignItems: 'center' }}
+          style={{ padding: 20, alignItems: 'center' }}
           onPress={handlePressMonthPicker}
         >
           <Text style={{ fontSize: 20 }}>{moment(date).format('MM-YYYY')}</Text>
