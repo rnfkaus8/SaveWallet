@@ -257,27 +257,23 @@ const Home = () => {
         <AddItemButton onPress={handlePressAddItem}>
           <Text>Add Item!!!</Text>
         </AddItemButton>
-        <KeyboardAvoidingView>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={snapPoints}
-          >
-            <HomeTableItemForm onPressSubmit={handlePressSubmit} />
-          </BottomSheetModal>
-        </KeyboardAvoidingView>
-        <KeyboardAvoidingView>
-          <BottomSheetModal
-            ref={bottomSheetUpdateModalRef}
-            index={1}
-            snapPoints={snapPoints}
-          >
-            <HomeTableItemUpdateForm
-              onPressEdit={handlePressEdit}
-              item={selectedItem}
-            />
-          </BottomSheetModal>
-        </KeyboardAvoidingView>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+        >
+          <HomeTableItemForm onPressSubmit={handlePressSubmit} />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={bottomSheetUpdateModalRef}
+          index={1}
+          snapPoints={snapPoints}
+        >
+          <HomeTableItemUpdateForm
+            onPressEdit={handlePressEdit}
+            item={selectedItem}
+          />
+        </BottomSheetModal>
         <KeyboardAvoidingView>
           <BottomSheetModal
             snapPoints={snapPoints}

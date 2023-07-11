@@ -3,6 +3,7 @@ import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { Item } from '../../model/Item';
 import RealmContext from '../../model';
 
@@ -20,12 +21,6 @@ const InputTitle = styled.Text`
   align-items: center;
   margin-right: 10px;
   margin-bottom: 10px;
-`;
-
-const Input = styled.TextInput`
-  border-radius: 10px;
-  border-width: 2px;
-  border-color: #000;
 `;
 
 interface HomeTableItemUpdateFormProps {
@@ -85,12 +80,26 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
       <Wrapper>
         <InputWrapper>
           <InputTitle>상품명</InputTitle>
-          <Input style={{ padding: 10 }} onChangeText={setName} value={name} />
+          <BottomSheetTextInput
+            style={{
+              padding: 10,
+              borderRadius: 10,
+              borderWidth: 2,
+              borderColor: '#000',
+            }}
+            onChangeText={setName}
+            value={name}
+          />
         </InputWrapper>
         <InputWrapper>
           <InputTitle>가격</InputTitle>
-          <Input
-            style={{ padding: 10 }}
+          <BottomSheetTextInput
+            style={{
+              padding: 10,
+              borderRadius: 10,
+              borderWidth: 2,
+              borderColor: '#000',
+            }}
             keyboardType="number-pad"
             onChangeText={handleChangePrice}
             value={priceStr}
