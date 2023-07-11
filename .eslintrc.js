@@ -73,7 +73,8 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'warn',
     '@typescript-eslint/no-unsafe-call' : 'off',
     'eslint-disable-next-line':'off',
-    'no-underscore-dangle':'off'
+    'no-underscore-dangle':'off',
+    '@typescript-eslint/no-unsafe-assignment' : 'off'
   },
   settings: {
     react: {
