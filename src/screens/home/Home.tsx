@@ -20,7 +20,6 @@ import {
 } from '@gorhom/bottom-sheet';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Results } from 'realm';
-import MonthPicker, { EventTypes } from 'react-native-month-year-picker';
 import moment from 'moment';
 import { Item } from '../../model/Item';
 import { edit, trashcan } from '../../assets/resources/images';
@@ -29,6 +28,7 @@ import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { GoalForm } from './GoalForm';
+import { MonthPicker } from '../../common/components/MonthPicker';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -87,7 +87,9 @@ const Home = () => {
   const [tableRow, setTableRow] = useState<Item[]>();
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const [date, setDate] = useState<Date>(new Date());
+  const [selectedMonth, setSelectedMonth] = useState<Date>(
+    startOfMonth(new Date()),
+  );
   const [isOpenMonthPicker, setIsOpenMonthPicker] = useState(false);
   const itemLists = RealmContext.useQuery(Item);
   const realm = RealmContext.useRealm();
@@ -104,8 +106,8 @@ const Home = () => {
 
     const filteredData: Results<Item> = itemLists.filtered(
       'date between { $0, $1 }',
-      startOfMonth(date),
-      endOfMonth(date),
+      startOfMonth(selectedMonth),
+      endOfMonth(selectedMonth),
     );
 
     setTableRow(
@@ -116,7 +118,7 @@ const Home = () => {
         return val;
       }),
     );
-  }, [date, itemLists]);
+  }, [selectedMonth, itemLists]);
 
   useEffect(() => {
     fetchingData();
@@ -218,12 +220,16 @@ const Home = () => {
   }, []);
 
   const handleChangeMonthDate = useCallback(
-    (event: EventTypes, newDate: Date) => {
+    (newDate: Date) => {
       setIsOpenMonthPicker(false);
-      setDate(newDate || date);
+      setSelectedMonth(newDate || selectedMonth);
     },
-    [date],
+    [selectedMonth],
   );
+
+  const handleRequestClose = useCallback(() => {
+    setIsOpenMonthPicker(false);
+  }, []);
 
   return (
     <BottomSheetModalProvider>
@@ -232,13 +238,16 @@ const Home = () => {
           style={{ padding: 20, alignItems: 'center' }}
           onPress={handlePressMonthPicker}
         >
-          <Text style={{ fontSize: 20 }}>{moment(date).format('MM-YYYY')}</Text>
+          <Text style={{ fontSize: 20 }}>
+            {moment(selectedMonth).format('MM-YYYY')}
+          </Text>
         </TouchableOpacity>
         {isOpenMonthPicker && (
           <MonthPicker
-            value={date}
-            onChange={handleChangeMonthDate}
-            locale="ko"
+            isOpenMonthPicker={isOpenMonthPicker}
+            onChangeSelectedMonth={handleChangeMonthDate}
+            onRequestClose={handleRequestClose}
+            selectedMonth={selectedMonth}
           />
         )}
         <TotalPriceWrapper>
