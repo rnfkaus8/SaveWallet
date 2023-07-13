@@ -38,6 +38,7 @@ module.exports = {
         arrowParens: 'always',
       },
     ],
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
     'react/jsx-fragments': ['off', 'element'],
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/no-floating-promises': 'off',
