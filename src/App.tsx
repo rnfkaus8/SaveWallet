@@ -5,10 +5,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Home from './screens/home/Home';
 import { RouteName } from './assets/navigation';
 import RealmContext from './model';
+import useMemberUpdate from './hooks/useMemberUpdate';
 
 const Stack = createNativeStackNavigator();
 const { RealmProvider } = RealmContext;
 const App = () => {
+  useMemberUpdate();
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
