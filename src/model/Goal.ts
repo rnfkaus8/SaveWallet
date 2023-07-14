@@ -7,12 +7,15 @@ export class Goal extends Realm.Object<Goal> {
 
   endDate: Date;
 
+  goalPrice: number;
+
   static schema = {
     name: 'Goal',
     properties: {
       id: 'objectId',
       startDate: 'date',
       endDate: 'date',
+      goalPrice: 'int',
     },
     primaryKey: 'id',
   };
