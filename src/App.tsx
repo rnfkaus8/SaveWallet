@@ -6,12 +6,13 @@ import Home from './screens/home/Home';
 import { RouteName } from './assets/navigation';
 import RealmContext from './model';
 import useMemberUpdate from './hooks/useMemberUpdate';
+import { useGoalInitialize } from './hooks/useGoalInitialize';
 
 const Stack = createNativeStackNavigator();
 const { RealmProvider } = RealmContext;
 const App = () => {
   useMemberUpdate();
-
+  useGoalInitialize();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
