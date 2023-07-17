@@ -3,9 +3,7 @@ import Realm from 'realm';
 export class Goal extends Realm.Object<Goal> {
   id: Realm.BSON.ObjectId;
 
-  startDate: Date;
-
-  endDate: Date;
+  date: Date;
 
   goalPrice: number;
 
@@ -13,8 +11,7 @@ export class Goal extends Realm.Object<Goal> {
     name: 'Goal',
     properties: {
       id: 'objectId',
-      startDate: 'date',
-      endDate: 'date',
+      date: 'date',
       goalPrice: 'int',
     },
     primaryKey: 'id',

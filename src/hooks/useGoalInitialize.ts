@@ -13,8 +13,7 @@ export const useGoalInitialize = () => {
       realm.write(() => {
         realm.create('Goal', {
           id: new Realm.BSON.ObjectId(),
-          startDate: startOfMonth(new Date()),
-          endDate: endOfMonth(new Date()),
+          date: new Date(),
           goalPrice: 200000,
         });
       });
