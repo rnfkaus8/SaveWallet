@@ -46,7 +46,7 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
   const months = useMemo(() => {
     const today = startOfDay(new Date());
     return eachMonthOfInterval({
-      start: member.startedAt,
+      start: new Date(member.startedAt),
       end: addDays(today, 1),
     })
       .map((date) => {

@@ -22,8 +22,8 @@ const useMemberUpdate = () => {
     }
 
     const payload: MemberState = {
-      id: members[0].id,
-      startedAt: members[0].startedAd,
+      id: members[0].id.toString(),
+      startedAt: members[0].startedAt.toISOString(),
     };
     dispatch(memberFetched(payload));
   }, [dispatch, members, members.length, realm]);

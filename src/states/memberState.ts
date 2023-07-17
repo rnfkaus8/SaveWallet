@@ -3,13 +3,13 @@ import Realm from 'realm';
 import { Member } from '../model/Member';
 
 export interface MemberState {
-  id: Realm.BSON.ObjectId;
-  startedAt: Date;
+  id: string;
+  startedAt: string;
 }
 
 const initialState: MemberState = {
-  id: new Realm.BSON.ObjectId(),
-  startedAt: new Date(),
+  id: '',
+  startedAt: new Date().toISOString(),
 };
 
 export const memberFetched = createAction<MemberState>('member/memberFetched');
