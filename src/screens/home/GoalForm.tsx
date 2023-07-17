@@ -1,5 +1,6 @@
 import { TextInput, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 export const GoalForm = () => {
   const [goal, setGoal] = useState(0);
@@ -10,10 +11,15 @@ export const GoalForm = () => {
   }, []);
   return (
     <View>
-      <TextInput
-        value={goalStr}
-        keyboardType="number-pad"
+      <BottomSheetTextInput
+        style={{
+          padding: 10,
+          borderRadius: 10,
+          borderWidth: 2,
+          borderColor: '#000',
+        }}
         onChangeText={handleChangeGoal}
+        value={goalStr}
       />
     </View>
   );

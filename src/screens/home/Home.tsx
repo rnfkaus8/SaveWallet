@@ -12,6 +12,7 @@ import {
   ListRenderItemInfo,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import styled from 'styled-components/native';
 import {
@@ -21,6 +22,7 @@ import {
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { Results } from 'realm';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 import { Item } from '../../model/Item';
 import { edit, trashcan } from '../../assets/resources/images';
 import RealmContext from '../../model';
@@ -29,6 +31,11 @@ import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { GoalForm } from './GoalForm';
 import { MonthPicker } from '../../common/components/MonthPicker';
+import { RootState } from '../../store';
+import { GoalState } from '../../states/goalState';
+import { Goal } from '../../model/Goal';
+import useMemberUpdate from '../../hooks/useMemberUpdate';
+import { useGoalInitialize } from '../../hooks/useGoalInitialize';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -68,8 +75,7 @@ const Wrapper = styled.SafeAreaView`
 
 const TotalPriceWrapper = styled.View`
   padding: 20px 40px;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
 `;
 
 const AddItemButton = styled.TouchableOpacity`
@@ -100,6 +106,14 @@ const Home = () => {
   const snapPoints = useMemo(() => {
     return ['25%', '50%'];
   }, []);
+  const [goal, setGoal] = useState(0);
+  const [selectedMonthGoal, setSelectedMonthGoal] =
+    useState<Results<Goal> | null>(null);
+
+  const goals: Results<Goal> = RealmContext.useQuery(Goal);
+
+  useMemberUpdate();
+  useGoalInitialize();
 
   const fetchingData = useCallback(() => {
     setTotalPrice(0);
@@ -120,9 +134,25 @@ const Home = () => {
     );
   }, [selectedMonth, itemLists]);
 
+  const fetchingGoalData = useCallback(() => {
+    const filteredGoals = goals.filtered(
+      'date between { $0, $1 }',
+      startOfMonth(selectedMonth),
+      endOfMonth(selectedMonth),
+    );
+
+    if (filteredGoals.isEmpty()) {
+      setGoal(200000);
+    } else {
+      setGoal(filteredGoals[0].goalPrice);
+      setSelectedMonthGoal(filteredGoals);
+    }
+  }, [goals, selectedMonth]);
+
   useEffect(() => {
     fetchingData();
-  }, [fetchingData]);
+    fetchingGoalData();
+  }, [fetchingData, fetchingGoalData]);
 
   const handlePressAddItem = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -231,6 +261,10 @@ const Home = () => {
     setIsOpenMonthPicker(false);
   }, []);
 
+  const handlePressAddGoal = useCallback(() => {
+    bottomSheetGoalModalRef.current?.present();
+  }, []);
+
   return (
     <BottomSheetModalProvider>
       <Wrapper>
@@ -251,7 +285,18 @@ const Home = () => {
           />
         )}
         <TotalPriceWrapper>
-          <Text>총 금액 : {totalPrice}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ textAlign: 'left' }}>{goal}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ textAlign: 'right' }}>{totalPrice}</Text>
+          </View>
+          <TouchableOpacity
+            style={{ flex: 0.5, marginLeft: 10, backgroundColor: 'gray' }}
+            onPress={handlePressAddGoal}
+          >
+            <Text style={{ textAlign: 'center' }}>추가</Text>
+          </TouchableOpacity>
         </TotalPriceWrapper>
         <ListWrapper>
           <FlatList
