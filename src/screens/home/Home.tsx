@@ -180,6 +180,10 @@ const Home = () => {
     bottomSheetUpdateModalRef.current?.dismiss();
   }, []);
 
+  const handlePressGoal = useCallback(() => {
+    bottomSheetGoalModalRef.current?.dismiss();
+  }, []);
+
   const handlePressItemRow = useCallback(
     (isSelectedItem: boolean, item: Item) => {
       bottomSheetUpdateModalRef.current?.dismiss();
@@ -334,7 +338,7 @@ const Home = () => {
             ref={bottomSheetGoalModalRef}
             index={1}
           >
-            <GoalForm />
+            <GoalForm onPressSubmit={handlePressGoal} />
           </BottomSheetModal>
         </KeyboardAvoidingView>
       </Wrapper>
