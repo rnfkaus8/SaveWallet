@@ -3,30 +3,39 @@ import React, { useCallback, useState } from 'react';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Realm from 'realm';
 import RealmContext from '../../model';
+import { Goal } from '../../model/Goal';
 
 interface GoalFormProps {
+  selectedMonthGoal: Goal | null;
   onPressSubmit: () => void;
 }
 
-export const GoalForm: React.FC<GoalFormProps> = ({ onPressSubmit }) => {
-  const [goal, setGoal] = useState(0);
-  const [goalStr, setGoalStr] = useState('');
+export const GoalForm: React.FC<GoalFormProps> = ({
+  selectedMonthGoal,
+  onPressSubmit,
+}) => {
+  const [goal, setGoal] = useState(
+    selectedMonthGoal ? selectedMonthGoal.goalPrice : 0,
+  );
+  const [goalStr, setGoalStr] = useState(
+    selectedMonthGoal ? selectedMonthGoal.goalPrice.toString : '',
+  );
   const handleChangeGoal = useCallback((text: string) => {
     setGoalStr(text);
     setGoal(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
   const realm = RealmContext.useRealm();
+  const Goals = RealmContext.useQuery(Goal);
 
   const handlePressSubmit = useCallback(() => {
-    realm.write(() => {
-      realm.create('Goal', {
-        id: new Realm.BSON.ObjectId(),
-        date: new Date(),
-        goalPrice: goal,
+    if (selectedMonthGoal) {
+      realm.write(() => {
+        selectedMonthGoal.date = new Date();
+        selectedMonthGoal.goalPrice = goal;
       });
-    });
+    }
     onPressSubmit();
-  }, [goal, onPressSubmit, realm]);
+  }, [goal, onPressSubmit, realm, selectedMonthGoal]);
 
   return (
     <View style={{ padding: 40 }}>
