@@ -20,7 +20,7 @@ import {
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
 import { endOfMonth, startOfMonth } from 'date-fns';
-import { Results } from 'realm';
+import Realm, { Results } from 'realm';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { Item } from '../../model/Item';
@@ -143,11 +143,18 @@ const Home = () => {
 
     if (filteredGoals.isEmpty()) {
       setGoal(200000);
+      realm.write(() => {
+        realm.create('Goal', {
+          id: new Realm.BSON.ObjectId(),
+          date: new Date(),
+          goalPrice: 200000,
+        });
+      });
     } else {
       setGoal(filteredGoals[0].goalPrice);
       setSelectedMonthGoal(filteredGoals);
     }
-  }, [goals, selectedMonth]);
+  }, [goals, realm, selectedMonth]);
 
   useEffect(() => {
     fetchingData();
