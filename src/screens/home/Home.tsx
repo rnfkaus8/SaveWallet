@@ -74,7 +74,7 @@ const Wrapper = styled.SafeAreaView`
 `;
 
 const TotalPriceWrapper = styled.View`
-  padding: 20px 40px;
+  padding: 20px;
   flex-direction: row;
 `;
 
@@ -107,8 +107,7 @@ const Home = () => {
     return ['25%', '50%'];
   }, []);
   const [goal, setGoal] = useState(0);
-  const [selectedMonthGoal, setSelectedMonthGoal] =
-    useState<Results<Goal> | null>(null);
+  const [selectedMonthGoal, setSelectedMonthGoal] = useState<Goal | null>(null);
 
   const goals: Results<Goal> = RealmContext.useQuery(Goal);
 
@@ -152,7 +151,7 @@ const Home = () => {
       });
     } else {
       setGoal(filteredGoals[0].goalPrice);
-      setSelectedMonthGoal(filteredGoals);
+      setSelectedMonthGoal(filteredGoals[0]);
     }
   }, [goals, realm, selectedMonth]);
 
@@ -297,13 +296,31 @@ const Home = () => {
         )}
         <TotalPriceWrapper>
           <View style={{ flex: 1 }}>
-            <Text style={{ textAlign: 'left' }}>{goal}</Text>
+            <Text
+              style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bold' }}
+            >
+              목표 금액
+            </Text>
+            <Text style={{ textAlign: 'left', fontSize: 15 }}>{goal}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ textAlign: 'right' }}>{totalPrice}</Text>
+            <Text
+              style={{ textAlign: 'right', fontSize: 15, fontWeight: 'bold' }}
+            >
+              사용 금액
+            </Text>
+            <Text style={{ textAlign: 'right', fontSize: 15 }}>
+              {totalPrice}
+            </Text>
           </View>
           <TouchableOpacity
-            style={{ flex: 0.5, marginLeft: 10, backgroundColor: 'gray' }}
+            style={{
+              marginLeft: 30,
+              flex: 0.5,
+              backgroundColor: 'gray',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             onPress={handlePressAddGoal}
           >
             <Text style={{ textAlign: 'center' }}>추가</Text>
@@ -345,7 +362,10 @@ const Home = () => {
             ref={bottomSheetGoalModalRef}
             index={1}
           >
-            <GoalForm onPressSubmit={handlePressGoal} />
+            <GoalForm
+              selectedMonthGoal={selectedMonthGoal}
+              onPressSubmit={handlePressGoal}
+            />
           </BottomSheetModal>
         </KeyboardAvoidingView>
       </Wrapper>
