@@ -18,7 +18,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
     selectedMonthGoal ? selectedMonthGoal.goalPrice : 0,
   );
   const [goalStr, setGoalStr] = useState(
-    selectedMonthGoal ? selectedMonthGoal.goalPrice.toString : '',
+    selectedMonthGoal ? selectedMonthGoal.goalPrice.toString() : '',
   );
   const handleChangeGoal = useCallback((text: string) => {
     setGoalStr(text);
@@ -30,7 +30,6 @@ export const GoalForm: React.FC<GoalFormProps> = ({
   const handlePressSubmit = useCallback(() => {
     if (selectedMonthGoal) {
       realm.write(() => {
-        selectedMonthGoal.date = new Date();
         selectedMonthGoal.goalPrice = goal;
       });
     }
