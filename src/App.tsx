@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -12,14 +12,13 @@ import { store } from './store';
 const Stack = createNativeStackNavigator();
 const { RealmProvider } = RealmContext;
 const App = () => {
+  const handleNavigationContainerReady = useCallback(() => {
+    RNBootSplash.hide();
+  }, []);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
-        <NavigationContainer
-          onReady={() => {
-            RNBootSplash.hide();
-          }}
-        >
+        <NavigationContainer onReady={handleNavigationContainerReady}>
           <RealmProvider>
             <Stack.Navigator>
               <Stack.Screen name={RouteName.Home} component={Home} />
