@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  Animated,
   FlatList,
   Image,
   KeyboardAvoidingView,
@@ -22,7 +23,6 @@ import {
 import { endOfMonth, startOfMonth } from 'date-fns';
 import Realm, { Results } from 'realm';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
 import { Item } from '../../model/Item';
 import { edit, trashcan } from '../../assets/resources/images';
 import RealmContext from '../../model';
@@ -31,8 +31,6 @@ import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { GoalForm } from './GoalForm';
 import { MonthPicker } from '../../common/components/MonthPicker';
-import { RootState } from '../../store';
-import { GoalState } from '../../states/goalState';
 import { Goal } from '../../model/Goal';
 import useMemberUpdate from '../../hooks/useMemberUpdate';
 import { useGoalInitialize } from '../../hooks/useGoalInitialize';
@@ -106,6 +104,9 @@ const Home = () => {
   const snapPoints = useMemo(() => {
     return ['25%', '50%'];
   }, []);
+
+  const progressBarValue = useRef(new Animated.Value(0)).current;
+
   const [goal, setGoal] = useState(0);
   const [selectedMonthGoal, setSelectedMonthGoal] = useState<Goal | null>(null);
 
@@ -113,6 +114,26 @@ const Home = () => {
 
   useMemberUpdate();
   useGoalInitialize();
+
+  const loadProgressBar = useCallback(() => {
+    const toValue = totalPrice / goal >= 1 ? 100 : (totalPrice / goal) * 100;
+    console.log(toValue);
+    Animated.timing(progressBarValue, {
+      useNativeDriver: false,
+      toValue,
+      duration: 500,
+    }).start();
+  }, [goal, progressBarValue, totalPrice]);
+
+  const progressBarWidth = progressBarValue.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+    extrapolate: 'clamp',
+  });
+
+  useEffect(() => {
+    loadProgressBar();
+  }, [loadProgressBar]);
 
   const fetchingData = useCallback(() => {
     setTotalPrice(0);
@@ -313,6 +334,7 @@ const Home = () => {
               {totalPrice}
             </Text>
           </View>
+
           <TouchableOpacity
             style={{
               marginLeft: 30,
@@ -326,6 +348,25 @@ const Home = () => {
             <Text style={{ textAlign: 'center' }}>추가</Text>
           </TouchableOpacity>
         </TotalPriceWrapper>
+        <View style={{ padding: 20 }}>
+          <View
+            style={{
+              width: '100%',
+              height: 8,
+              backgroundColor: '#F0F0F0',
+              borderRadius: 10,
+            }}
+          >
+            <Animated.View
+              style={{
+                width: progressBarWidth,
+                height: 8,
+                backgroundColor: '#AAC9CE',
+                borderRadius: 10,
+              }}
+            />
+          </View>
+        </View>
         <ListWrapper>
           <FlatList
             keyExtractor={(item, index) => {
