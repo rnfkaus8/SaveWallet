@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* SaveWalletTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SaveWalletTests.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-SaveWallet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-SaveWallet.a */; };
+		0EBEE9BC2A70A9BE00D81A87 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBEE9BB2A70A9BE00D81A87 /* BootSplash.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-SaveWallet-SaveWalletTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-SaveWallet-SaveWalletTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +30,7 @@
 		00E356EE1AD99517003FC87E /* SaveWalletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaveWalletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* SaveWalletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaveWalletTests.m; sourceTree = "<group>"; };
+		0EBEE9BB2A70A9BE00D81A87 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = SaveWallet/BootSplash.storyboard; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SaveWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SaveWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SaveWallet/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = SaveWallet/AppDelegate.mm; sourceTree = "<group>"; };
@@ -41,7 +42,6 @@
 		5709B34CF0A7D63546082F79 /* Pods-SaveWallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SaveWallet.release.xcconfig"; path = "Target Support Files/Pods-SaveWallet/Pods-SaveWallet.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-SaveWallet-SaveWalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SaveWallet-SaveWalletTests.debug.xcconfig"; path = "Target Support Files/Pods-SaveWallet-SaveWalletTests/Pods-SaveWallet-SaveWalletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-SaveWallet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SaveWallet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SaveWallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-SaveWallet-SaveWalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SaveWallet-SaveWalletTests.release.xcconfig"; path = "Target Support Files/Pods-SaveWallet-SaveWalletTests/Pods-SaveWallet-SaveWalletTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -87,10 +87,10 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
+				0EBEE9BB2A70A9BE00D81A87 /* BootSplash.storyboard */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = SaveWallet;
@@ -242,8 +242,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				0EBEE9BC2A70A9BE00D81A87 /* BootSplash.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +433,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-SaveWallet-SaveWalletTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = KP3S783X57;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -461,6 +462,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = KP3S783X57;
 				INFOPLIST_FILE = SaveWalletTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -488,7 +490,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = KP3S783X57;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SaveWallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -518,7 +520,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = KP3S783X57;
 				INFOPLIST_FILE = SaveWallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
