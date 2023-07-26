@@ -5,11 +5,14 @@ import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import Modal from 'react-native-modal';
 import RealmContext from '../../model';
 import { Item } from '../../model/Item';
 
 interface HomeTableItemFormProps {
   onPressSubmit: () => void;
+  isOpenHomeTableItemForm: boolean;
+  onRequestClose(): void;
 }
 
 const Wrapper = styled.View`
@@ -30,6 +33,8 @@ const InputTitle = styled.Text`
 
 const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   onPressSubmit,
+  isOpenHomeTableItemForm,
+  onRequestClose,
 }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [name, setName] = useState('');
@@ -67,10 +72,15 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: 'white',
-      }}
+    <Modal
+      isVisible={isOpenHomeTableItemForm}
+      onBackdropPress={onRequestClose}
+      onBackButtonPress={onRequestClose}
+      style={{ margin: 0, justifyContent: 'flex-end' }}
+      onSwipeComplete={onRequestClose}
+      useNativeDriverForBackdrop
+      useNativeDriver
+      swipeDirection="down"
     >
       <Wrapper>
         <InputWrapper>
@@ -132,7 +142,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
           <Text>Submit!!</Text>
         </TouchableOpacity>
       </Wrapper>
-    </SafeAreaView>
+    </Modal>
   );
 };
 

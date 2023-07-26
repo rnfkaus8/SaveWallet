@@ -94,7 +94,10 @@ const Home = () => {
   const [selectedMonth, setSelectedMonth] = useState<Date>(
     startOfMonth(new Date()),
   );
+
   const [isOpenMonthPicker, setIsOpenMonthPicker] = useState(false);
+  const [isOpenHomeTableItemForm, setIsOpenHomeTableItemForm] = useState(false);
+
   const itemLists = RealmContext.useQuery(Item);
   const realm = RealmContext.useRealm();
 
@@ -199,10 +202,6 @@ const Home = () => {
     [fetchingData, realm],
   );
 
-  const handlePressSubmit = useCallback(() => {
-    bottomSheetModalRef.current?.dismiss();
-  }, []);
-
   const handlePressEdit = useCallback(() => {
     bottomSheetUpdateModalRef.current?.dismiss();
   }, []);
@@ -288,8 +287,12 @@ const Home = () => {
     [selectedMonth],
   );
 
-  const handleRequestClose = useCallback(() => {
+  const handleMonthPickerClose = useCallback(() => {
     setIsOpenMonthPicker(false);
+  }, []);
+
+  const handleHomeTableItemFormClose = useCallback(() => {
+    setIsOpenHomeTableItemForm(false);
   }, []);
 
   const handlePressAddGoal = useCallback(() => {
@@ -311,7 +314,7 @@ const Home = () => {
           <MonthPicker
             isOpenMonthPicker={isOpenMonthPicker}
             onChangeSelectedMonth={handleChangeMonthDate}
-            onRequestClose={handleRequestClose}
+            onRequestClose={handleMonthPickerClose}
             selectedMonth={selectedMonth}
           />
         )}
@@ -385,7 +388,10 @@ const Home = () => {
           index={1}
           snapPoints={snapPoints}
         >
-          <HomeTableItemForm onPressSubmit={handlePressSubmit} />
+          <HomeTableItemForm
+            isOpenHomeTableItemForm={isOpenHomeTableItemForm}
+            onRequestClose={handleHomeTableItemFormClose}
+          />
         </BottomSheetModal>
         <BottomSheetModal
           ref={bottomSheetUpdateModalRef}
