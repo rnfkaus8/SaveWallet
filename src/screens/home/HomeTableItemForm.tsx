@@ -1,18 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Realm from 'realm';
-import { KeyboardAvoidingView, Text, TouchableOpacity } from 'react-native';
+import { Text, TextInput, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Modal from 'react-native-modal';
-import RealmContext from '../../model';
-import { Item } from '../../model/Item';
+import { itemRepository } from '../../repository';
 
 interface HomeTableItemFormProps {
-  onPressSubmit: () => void;
+  onPressSubmitItem(): void;
   isOpenHomeTableItemForm: boolean;
   onRequestClose(): void;
+  memberId: number;
 }
 
 const Wrapper = styled.View`
@@ -32,9 +29,10 @@ const InputTitle = styled.Text`
 `;
 
 const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
-  onPressSubmit,
+  onPressSubmitItem,
   isOpenHomeTableItemForm,
   onRequestClose,
+  memberId,
 }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [name, setName] = useState('');
@@ -42,28 +40,19 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   const [priceStr, setPriceStr] = useState('');
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
-  const realm = RealmContext.useRealm();
-
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
     setPrice(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
 
-  const saveItem = useCallback(() => {
-    realm.write(() => {
-      realm.create('Item', {
-        name,
-        price,
-        date,
-        _id: new Realm.BSON.ObjectId(),
-      });
-    });
-  }, [date, name, price, realm]);
+  const saveItem = useCallback(async () => {
+    await itemRepository.save(name, price, memberId, date);
+  }, [date, memberId, name, price]);
 
   const handlePressSubmit = useCallback(() => {
     saveItem();
-    onPressSubmit();
-  }, [saveItem, onPressSubmit]);
+    onPressSubmitItem();
+  }, [saveItem, onPressSubmitItem]);
 
   const handlePressDatePicker = useCallback(() => {
     setDatePickerOpen((prev) => {
@@ -85,7 +74,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
       <Wrapper>
         <InputWrapper>
           <InputTitle>상품명</InputTitle>
-          <BottomSheetTextInput
+          <TextInput
             style={{
               padding: 10,
               borderRadius: 10,
@@ -98,7 +87,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
         </InputWrapper>
         <InputWrapper>
           <InputTitle>가격</InputTitle>
-          <BottomSheetTextInput
+          <TextInput
             style={{
               padding: 10,
               borderRadius: 10,
