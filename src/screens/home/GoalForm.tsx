@@ -1,8 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import Realm from 'realm';
-import RealmContext from '../../model';
 import { Goal } from '../../model/Goal';
 
 interface GoalFormProps {
@@ -24,8 +21,6 @@ export const GoalForm: React.FC<GoalFormProps> = ({
     setGoalStr(text);
     setGoal(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
-  const realm = RealmContext.useRealm();
-  const Goals = RealmContext.useQuery(Goal);
 
   const handlePressSubmit = useCallback(() => {
     if (selectedMonthGoal) {
