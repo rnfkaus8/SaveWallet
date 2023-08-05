@@ -6,11 +6,10 @@ import { Provider } from 'react-redux';
 import RNBootSplash from 'react-native-bootsplash';
 import Home from './screens/home/Home';
 import { RouteName } from './assets/navigation';
-import RealmContext from './model';
 import { store } from './store';
+import { Login } from './screens/member/Login';
 
 const Stack = createNativeStackNavigator();
-const { RealmProvider } = RealmContext;
 const App = () => {
   const handleNavigationContainerReady = useCallback(() => {
     RNBootSplash.hide();
@@ -19,11 +18,10 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <NavigationContainer onReady={handleNavigationContainerReady}>
-          <RealmProvider>
-            <Stack.Navigator>
-              <Stack.Screen name={RouteName.Home} component={Home} />
-            </Stack.Navigator>
-          </RealmProvider>
+          <Stack.Navigator>
+            <Stack.Screen name={RouteName.Login} component={Login} />
+            <Stack.Screen name={RouteName.Home} component={Home} />
+          </Stack.Navigator>
         </NavigationContainer>
       </Provider>
     </GestureHandlerRootView>
