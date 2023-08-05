@@ -46,14 +46,14 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
   const months = useMemo(() => {
     const today = startOfDay(new Date());
     return eachMonthOfInterval({
-      start: new Date(member.startedAt),
+      start: new Date(member.createdAt),
       end: addDays(today, 1),
     })
       .map((date) => {
         return startOfDay(date);
       })
       .reverse();
-  }, [member.startedAt]);
+  }, [member.createdAt]);
 
   const handlePressMonthPickerItem = useCallback(
     (month: Date) => {
