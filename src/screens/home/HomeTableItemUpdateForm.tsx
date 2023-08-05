@@ -3,9 +3,7 @@ import { Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { Item } from '../../model/Item';
-import RealmContext from '../../model';
 
 const Wrapper = styled.View`
   padding: 40px;
@@ -32,7 +30,6 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   item,
   onPressEdit,
 }) => {
-  // const item: Item = RealmContext.useObject(Item, itemId);
   const [date, setDate] = useState<Date>(item ? item.date : new Date());
   const [name, setName] = useState<string>(item ? item.name : '');
   const [price, setPrice] = useState<number>(item ? item.price : 0);
@@ -41,8 +38,6 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   );
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
 
-  const realm = RealmContext.useRealm();
-
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
     setPrice(parseInt(text.replace(/[^0-9]/g, ''), 10));
@@ -50,13 +45,13 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
 
   const updateItem = useCallback(() => {
     if (item) {
-      realm.write(() => {
-        item.name = name;
-        item.price = price;
-        item.date = date;
-      });
+      // realm.write(() => {
+      //   item.name = name;
+      //   item.price = price;
+      //   item.date = date;
+      // });
     }
-  }, [date, item, name, price, realm]);
+  }, [item]);
 
   const handlePressSubmit = useCallback(() => {
     updateItem();
