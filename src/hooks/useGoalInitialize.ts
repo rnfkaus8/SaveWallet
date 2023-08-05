@@ -1,22 +1,21 @@
-import Realm, { Results } from 'realm';
 import { useEffect } from 'react';
-import { endOfMonth, startOfMonth } from 'date-fns';
-import RealmContext from '../model';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 import { Goal } from '../model/Goal';
+import { RootState } from '../store';
+import { MemberState } from '../states/memberState';
+import { goalRepository } from '../repository';
 
 export const useGoalInitialize = () => {
-  const goals: Results<Goal> = RealmContext.useQuery<Goal>(Goal);
-  const realm = RealmContext.useRealm();
+  const member = useSelector<RootState, MemberState>((state: RootState) => {
+    return state.member;
+  });
 
   useEffect(() => {
-    if (goals.isEmpty()) {
-      realm.write(() => {
-        realm.create('Goal', {
-          id: new Realm.BSON.ObjectId(),
-          date: new Date(),
-          goalPrice: 200000,
-        });
-      });
-    }
-  }, [goals, realm]);
+    goalRepository.findByTargetMonth(
+      moment(new Date()).format('YYYYMM'),
+      200000,
+      member.id,
+    );
+  }, [member.id]);
 };
