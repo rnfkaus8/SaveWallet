@@ -38,7 +38,10 @@ module.exports = {
         arrowParens: 'always',
       },
     ],
-    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+    'no-param-reassign': [
+      'error',
+      { props: true, ignorePropertyModificationsFor: ['state'] },
+    ],
     'react/jsx-fragments': ['off', 'element'],
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/no-floating-promises': 'off',
@@ -72,10 +75,12 @@ module.exports = {
     'no-unused-vars': 'warn',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'warn',
-    '@typescript-eslint/no-unsafe-call' : 'off',
-    'eslint-disable-next-line':'off',
-    'no-underscore-dangle':'off',
-    '@typescript-eslint/no-unsafe-assignment' : 'off'
+    '@typescript-eslint/no-unsafe-call': 'off',
+    'eslint-disable-next-line': 'off',
+    'no-underscore-dangle': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    'class-methods-use-this': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
   },
   settings: {
     react: {
