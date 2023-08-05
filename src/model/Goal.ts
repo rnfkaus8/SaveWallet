@@ -1,19 +1,45 @@
-import Realm from 'realm';
+export class Goal {
+  private _id: number;
 
-export class Goal extends Realm.Object<Goal> {
-  id: Realm.BSON.ObjectId;
+  private _createdAt: Date;
 
-  date: Date;
+  private _updatedAt: Date;
 
-  goalPrice: number;
+  private _targetMonth: string;
 
-  static schema = {
-    name: 'Goal',
-    properties: {
-      id: 'objectId',
-      date: 'date',
-      goalPrice: 'int',
-    },
-    primaryKey: 'id',
-  };
+  private _goalPrice: number;
+
+  get id(): number {
+    return this._id;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  get targetMonth(): string {
+    return this._targetMonth;
+  }
+
+  get goalPrice(): number {
+    return this._goalPrice;
+  }
+
+  constructor(
+    id: number,
+    createdAt: Date,
+    updatedAt: Date,
+    targetMonth: string,
+    goalPrice: number,
+  ) {
+    this._id = id;
+    this._createdAt = createdAt;
+    this._updatedAt = updatedAt;
+    this._targetMonth = targetMonth;
+    this._goalPrice = goalPrice;
+  }
 }

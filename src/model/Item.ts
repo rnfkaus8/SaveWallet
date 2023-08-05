@@ -1,22 +1,45 @@
-import Realm from 'realm';
+export class Item {
+  private _id: number;
 
-export class Item extends Realm.Object<Item> {
-  _id: Realm.BSON.ObjectId;
+  private _name: string;
 
-  name: string;
+  private _price: number;
 
-  price: number;
+  private _createdAt: Date;
 
-  date: Date;
+  private _updatedAt: Date;
 
-  static schema = {
-    name: 'Item',
-    properties: {
-      _id: 'objectId',
-      name: 'string',
-      price: 'int',
-      date: 'date',
-    },
-    primaryKey: '_id',
-  };
+  get id(): number {
+    return this._id;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get price(): number {
+    return this._price;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  constructor(
+    id: number,
+    name: string,
+    price: number,
+    startedAt: Date,
+    updatedAt: Date,
+  ) {
+    this._id = id;
+    this._name = name;
+    this._price = price;
+    this._createdAt = startedAt;
+    this._updatedAt = updatedAt;
+  }
 }

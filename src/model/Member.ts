@@ -1,16 +1,32 @@
-import Realm from 'realm';
+export class Member {
+  private _id: number;
 
-export class Member extends Realm.Object<Member> {
-  id: Realm.BSON.ObjectId;
+  private _name: string;
 
-  startedAt: Date;
+  private _createdAt: Date;
 
-  static schema = {
-    name: 'Member',
-    properties: {
-      id: 'objectId',
-      startedAt: 'date',
-    },
-    primaryKey: 'id',
-  };
+  private _updatedAt: Date;
+
+  get id(): number {
+    return this._id;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  constructor(id: number, name: string, createdAt: Date, updatedAt: Date) {
+    this._id = id;
+    this._name = name;
+    this._createdAt = createdAt;
+    this._updatedAt = updatedAt;
+  }
 }
