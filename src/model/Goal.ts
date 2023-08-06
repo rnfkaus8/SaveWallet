@@ -1,3 +1,4 @@
+export const goalTargetMonthFormat = 'YYYYMM';
 export class Goal {
   private _id: number;
 

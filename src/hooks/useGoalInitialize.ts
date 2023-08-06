@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { Goal } from '../model/Goal';
+import { goalTargetMonthFormat } from '../model/Goal';
 import { RootState } from '../store';
 import { MemberState } from '../states/memberState';
 import { goalRepository } from '../repository';
@@ -12,8 +12,8 @@ export const useGoalInitialize = () => {
   });
 
   useEffect(() => {
-    goalRepository.findByTargetMonth(
-      moment(new Date()).format('YYYYMM'),
+    goalRepository.saveNotExistMonth(
+      moment(new Date()).format(goalTargetMonthFormat),
       200000,
       member.id,
     );
