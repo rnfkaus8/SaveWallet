@@ -133,7 +133,6 @@ const Home = () => {
   const loadProgressBar = useCallback(() => {
     const toValue =
       totalPrice / goalPrice >= 1 ? 100 : (totalPrice / goalPrice) * 100;
-    console.log(toValue);
     Animated.timing(progressBarValue, {
       useNativeDriver: false,
       toValue,
