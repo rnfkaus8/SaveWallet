@@ -19,7 +19,7 @@ import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { GoalForm } from './GoalForm';
 import { MonthPicker } from '../../common/components/MonthPicker';
-import { Goal, goalTargetMonthFormat } from '../../model/Goal';
+import { Goal, GOAL_TARGET_MONTH_FORMAT } from '../../model/Goal';
 import { useGoalInitialize } from '../../hooks/useGoalInitialize';
 import { RootState } from '../../store';
 import { MemberState } from '../../states/memberState';
@@ -118,7 +118,7 @@ const Home = () => {
 
   const fetchGoal = useCallback(async () => {
     const findGoal = await goalRepository.findByTargetMonth(
-      moment(selectedMonth).format(goalTargetMonthFormat),
+      moment(selectedMonth).format(GOAL_TARGET_MONTH_FORMAT),
       member.id,
     );
     setGoalPrice(findGoal.goalPrice);
