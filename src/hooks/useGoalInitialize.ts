@@ -12,7 +12,7 @@ export const useGoalInitialize = () => {
   });
 
   useEffect(() => {
-    goalRepository.saveNotExistMonth(
+    goalRepository.findGoalOrSaveWhenNotExist(
       moment(new Date()).format(GOAL_TARGET_MONTH_FORMAT),
       200000,
       member.id,
