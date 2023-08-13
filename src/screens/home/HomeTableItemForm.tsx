@@ -13,7 +13,10 @@ interface HomeTableItemFormProps {
 }
 
 const Wrapper = styled.View`
-  padding: 40px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: white;
+  padding: 20px;
 `;
 
 const InputWrapper = styled.View`
@@ -49,8 +52,8 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
     await itemRepository.save(name, price, memberId, date);
   }, [date, memberId, name, price]);
 
-  const handlePressSubmit = useCallback(() => {
-    saveItem();
+  const handlePressSubmit = useCallback(async () => {
+    await saveItem();
     onPressSubmitItem();
   }, [saveItem, onPressSubmitItem]);
 
