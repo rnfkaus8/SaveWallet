@@ -5,6 +5,8 @@ export class Item {
 
   private _price: number;
 
+  private _boughtDate: Date;
+
   private _createdAt: Date;
 
   private _updatedAt: Date;
@@ -21,6 +23,10 @@ export class Item {
     return this._price;
   }
 
+  get boughtDate(): Date {
+    return this._boughtDate;
+  }
+
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -33,12 +39,14 @@ export class Item {
     id: number,
     name: string,
     price: number,
+    boughtDate: Date,
     startedAt: Date,
     updatedAt: Date,
   ) {
     this._id = id;
     this._name = name;
     this._price = price;
+    this._boughtDate = boughtDate;
     this._createdAt = startedAt;
     this._updatedAt = updatedAt;
   }
