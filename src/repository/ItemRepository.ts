@@ -53,4 +53,24 @@ export default class ItemRepository {
 
     throw Error('저장에 실패했습니다.');
   };
+
+  update = async (
+    id: number,
+    name: string,
+    price: number,
+    boughtDate: Date,
+  ): Promise<Item> => {
+    const axiosResponse = await axios.put<Item>('http://localhost:8080/item', {
+      id,
+      name,
+      price,
+      boughtDate,
+    });
+
+    if (axiosResponse.status === 200) {
+      return axiosResponse.data;
+    }
+
+    throw Error('업데이트에 실패했습니다.');
+  };
 }
