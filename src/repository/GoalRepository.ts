@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Goal } from '../model/Goal';
 
 export default class GoalRepository {
-  saveNotExistMonth = async (
+  findGoalOrSaveWhenNotExist = async (
     targetMonth: string,
     goalPrice: number,
     memberId: number,
