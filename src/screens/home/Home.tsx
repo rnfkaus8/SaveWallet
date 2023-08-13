@@ -20,7 +20,6 @@ import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { GoalForm } from './GoalForm';
 import { MonthPicker } from '../../common/components/MonthPicker';
 import { Goal, GOAL_TARGET_MONTH_FORMAT } from '../../model/Goal';
-import { useGoalInitialize } from '../../hooks/useGoalInitialize';
 import { RootState } from '../../store';
 import { MemberState } from '../../states/memberState';
 import { goalRepository, itemRepository } from '../../repository';
@@ -87,6 +86,8 @@ const Home = () => {
 
   const [isOpenMonthPicker, setIsOpenMonthPicker] = useState(false);
   const [isOpenHomeTableItemForm, setIsOpenHomeTableItemForm] = useState(false);
+  const [isOpenHomeTableItemUpdateForm, setIsOpenHomeTableItemUpdateForm] =
+    useState(false);
 
   const progressBarValue = useRef(new Animated.Value(0)).current;
 
@@ -96,8 +97,6 @@ const Home = () => {
   const member = useSelector<RootState, MemberState>((state: RootState) => {
     return state.member;
   });
-
-  useGoalInitialize();
 
   const fetchItemList = useCallback(async () => {
     const items = await itemRepository.getItemList(
@@ -117,8 +116,9 @@ const Home = () => {
   }, [member.id, selectedMonth]);
 
   const fetchGoal = useCallback(async () => {
-    const findGoal = await goalRepository.findByTargetMonth(
+    const findGoal = await goalRepository.findGoalOrSaveWhenNotExist(
       moment(selectedMonth).format(GOAL_TARGET_MONTH_FORMAT),
+      200000,
       member.id,
     );
     setGoalPrice(findGoal.goalPrice);
@@ -150,33 +150,6 @@ const Home = () => {
     loadProgressBar();
   }, [loadProgressBar]);
 
-  // const fetchingGoalData = useCallback(() => {
-  //   const filteredGoals = goals.filtered(
-  //     'date between { $0, $1 }',
-  //     startOfMonth(selectedMonth),
-  //     endOfMonth(selectedMonth),
-  //   );
-  //
-  //   if (filteredGoals.isEmpty()) {
-  //     setGoal(200000);
-  //     realm.write(() => {
-  //       realm.create('Goal', {
-  //         id: new Realm.BSON.ObjectId(),
-  //         date: new Date(),
-  //         goalPrice: 200000,
-  //       });
-  //     });
-  //   } else {
-  //     setGoal(filteredGoals[0].goalPrice);
-  //     setSelectedMonthGoal(filteredGoals[0]);
-  //   }
-  // }, [goals, realm, selectedMonth]);
-  //
-  // useEffect(() => {
-  //   fetchingData();
-  //   fetchingGoalData();
-  // }, [fetchingData, fetchingGoalData]);
-
   const handlePressDelete = useCallback(
     async (itemId: number) => {
       await itemRepository.delete(itemId);
@@ -196,9 +169,54 @@ const Home = () => {
     [],
   );
 
+  const handlePressMonthPicker = useCallback(() => {
+    setIsOpenMonthPicker(true);
+  }, []);
+
+  const handleChangeMonthDate = useCallback(
+    (newDate: Date) => {
+      setIsOpenMonthPicker(false);
+      setSelectedMonth(newDate || selectedMonth);
+    },
+    [selectedMonth],
+  );
+
+  const handleMonthPickerClose = useCallback(() => {
+    setIsOpenMonthPicker(false);
+  }, []);
+
+  const handlePressAddItemModalOpen = useCallback(() => {
+    setIsOpenHomeTableItemForm(true);
+  }, []);
+
+  const handlePressSubmitAddItem = useCallback(async () => {
+    await fetchItemList();
+    setIsOpenHomeTableItemForm(false);
+  }, [fetchItemList]);
+
+  const handleAddItemModalClose = useCallback(() => {
+    setIsOpenHomeTableItemForm(false);
+  }, []);
+
+  const handlePressEditItemModalOpen = useCallback(() => {
+    setIsOpenHomeTableItemUpdateForm(true);
+  }, []);
+
+  const handlePressSubmitEditItem = useCallback(async () => {
+    await fetchItemList();
+    setIsOpenHomeTableItemUpdateForm(false);
+  }, [fetchItemList]);
+
+  const handlePressEditItemModalClose = useCallback(() => {
+    setIsOpenHomeTableItemUpdateForm(false);
+  }, []);
+
+  const handlePressAddGoal = useCallback(() => {}, []);
+
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<Item>) => {
       const isSelectedItem = selectedItem?.id.toString() === item.id.toString();
+      const itemCreatedDateStr = new Date(item.boughtDate).toLocaleDateString();
       return (
         <RowWrapper
           onPress={() => {
@@ -212,7 +230,7 @@ const Home = () => {
           <VerticalSpacer size={10} />
           <Row>
             <Text style={{ flex: 1, textAlign: 'right' }}>
-              {item.createdAt.toLocaleDateString()}
+              {itemCreatedDateStr}
             </Text>
           </Row>
           <ToggleWrapper
@@ -231,7 +249,7 @@ const Home = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ flexDirection: 'row' }}
-              // onPress={handlePressEditItem}
+              onPress={handlePressEditItemModalOpen}
             >
               <Image source={edit} style={{ width: 14, height: 14 }} />
               <Text>수정하기</Text>
@@ -240,39 +258,13 @@ const Home = () => {
         </RowWrapper>
       );
     },
-    [handlePressDelete, handlePressItemRow, selectedItem?.id],
+    [
+      handlePressDelete,
+      handlePressEditItemModalOpen,
+      handlePressItemRow,
+      selectedItem?.id,
+    ],
   );
-
-  const handlePressMonthPicker = useCallback(() => {
-    setIsOpenMonthPicker(true);
-  }, []);
-
-  const handleChangeMonthDate = useCallback(
-    (newDate: Date) => {
-      setIsOpenMonthPicker(false);
-      setSelectedMonth(newDate || selectedMonth);
-    },
-    [selectedMonth],
-  );
-
-  const handleMonthPickerClose = useCallback(() => {
-    setIsOpenMonthPicker(false);
-  }, []);
-
-  const handlePressAddItem = useCallback(() => {
-    setIsOpenHomeTableItemForm(true);
-  }, []);
-
-  const handlePressSubmitItem = useCallback(async () => {
-    await fetchItemList();
-    setIsOpenHomeTableItemForm(false);
-  }, [fetchItemList]);
-
-  const handleHomeTableItemFormClose = useCallback(() => {
-    setIsOpenHomeTableItemForm(false);
-  }, []);
-
-  const handlePressAddGoal = useCallback(() => {}, []);
 
   return (
     <Wrapper>
@@ -350,21 +342,26 @@ const Home = () => {
           renderItem={renderItem}
         />
       </ListWrapper>
-      <AddItemButton onPress={handlePressAddItem}>
+      <AddItemButton onPress={handlePressAddItemModalOpen}>
         <Text>Add Item!!!</Text>
       </AddItemButton>
       {isOpenHomeTableItemForm && (
         <HomeTableItemForm
-          onPressSubmitItem={handlePressSubmitItem}
+          onPressSubmitItem={handlePressSubmitAddItem}
           memberId={member.id}
           isOpenHomeTableItemForm={isOpenHomeTableItemForm}
-          onRequestClose={handleHomeTableItemFormClose}
+          onRequestClose={handleAddItemModalClose}
         />
       )}
-      {/* <HomeTableItemUpdateForm */}
-      {/*  onPressEdit={handlePressEdit} */}
-      {/*  item={selectedItem} */}
-      {/* /> */}
+      {isOpenHomeTableItemUpdateForm && (
+        <HomeTableItemUpdateForm
+          onPressEdit={handlePressSubmitEditItem}
+          item={selectedItem}
+          isOpenHomeTableItemUpdateForm={isOpenHomeTableItemUpdateForm}
+          onRequestClose={handlePressEditItemModalClose}
+        />
+      )}
+
       {/* <GoalForm */}
       {/*  selectedMonthGoal={selectedMonthGoal} */}
       {/*  onPressSubmit={handlePressGoal} */}
