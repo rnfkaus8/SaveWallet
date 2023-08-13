@@ -23,7 +23,6 @@ interface MonthPickerProps {
 const MONTH_PICKER_ITEM_HEIGHT = 50;
 
 const MonthPickerButton = styled.TouchableOpacity`
-  padding: 0 20px;
   height: ${MONTH_PICKER_ITEM_HEIGHT}px;
   justify-content: center;
 `;
@@ -32,7 +31,14 @@ const Wrapper = styled.View`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   background-color: white;
+  padding: 20px;
 `;
+
+const HeaderWrapper = styled.View`
+  flex-direction: row;
+  margin-bottom: 10px;
+`;
+
 export const MonthPicker: React.FC<MonthPickerProps> = ({
   isOpenMonthPicker,
   onRequestClose,
@@ -53,7 +59,7 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
         return startOfDay(date);
       })
       .reverse();
-  }, [member.createdAt]);
+  }, [member]);
 
   const handlePressMonthPickerItem = useCallback(
     (month: Date) => {
@@ -122,21 +128,25 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
       propagateSwipe={months.length > 7}
     >
       <Wrapper>
-        <Text>월 선택하기</Text>
-        <TouchableOpacity
-          onPress={onRequestClose}
-          style={{ padding: 8, margin: -8 }}
-        >
-          <Text style={{ fontSize: 25 }}>X</Text>
-        </TouchableOpacity>
+        <HeaderWrapper>
+          <Text style={{ flex: 1, fontSize: 15, fontWeight: 'bold' }}>
+            월 선택하기
+          </Text>
+          <TouchableOpacity
+            onPress={onRequestClose}
+            style={{ padding: 8, margin: -8 }}
+          >
+            <Text style={{ fontSize: 15, fontWeight: 'bold' }}>X</Text>
+          </TouchableOpacity>
+        </HeaderWrapper>
+        <FlatList
+          data={months}
+          style={{ minHeight: 100, maxHeight: 400 }}
+          renderItem={renderItem}
+          getItemLayout={getItemLayout}
+          initialScrollIndex={scrollIndex}
+        />
       </Wrapper>
-      <FlatList
-        data={months}
-        style={{ minHeight: 100, maxHeight: 400 }}
-        renderItem={renderItem}
-        getItemLayout={getItemLayout}
-        initialScrollIndex={scrollIndex}
-      />
     </Modal>
   );
 };
