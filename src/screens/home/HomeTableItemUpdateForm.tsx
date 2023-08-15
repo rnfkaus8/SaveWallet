@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TextInput, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Modal from 'react-native-modal';
 import { Item } from '../../model/Item';
 
 const Wrapper = styled.View`
@@ -22,15 +23,19 @@ const InputTitle = styled.Text`
 `;
 
 interface HomeTableItemUpdateFormProps {
-  item: Item | null;
+  item: Item;
   onPressEdit: () => void;
+  isOpenHomeTableItemUpdateForm: boolean;
+  onRequestClose: () => void;
 }
 
 const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   item,
   onPressEdit,
+  isOpenHomeTableItemUpdateForm,
+  onRequestClose,
 }) => {
-  const [date, setDate] = useState<Date>(item ? item.date : new Date());
+  const [date, setDate] = useState<Date>(item.boughtDate);
   const [name, setName] = useState<string>(item ? item.name : '');
   const [price, setPrice] = useState<number>(item ? item.price : 0);
   const [priceStr, setPriceStr] = useState<string>(
@@ -43,13 +48,8 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
     setPrice(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
 
-  const updateItem = useCallback(() => {
+  const updateItem = useCallback(async () => {
     if (item) {
-      // realm.write(() => {
-      //   item.name = name;
-      //   item.price = price;
-      //   item.date = date;
-      // });
     }
   }, [item]);
 
@@ -65,17 +65,20 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: 'white',
-        position: 'relative',
-      }}
+    <Modal
+      isVisible={isOpenHomeTableItemUpdateForm}
+      onBackdropPress={onRequestClose}
+      onBackButtonPress={onRequestClose}
+      style={{ margin: 0, justifyContent: 'flex-end' }}
+      onSwipeComplete={onRequestClose}
+      useNativeDriverForBackdrop
+      useNativeDriver
+      swipeDirection="down"
     >
       <Wrapper>
         <InputWrapper>
           <InputTitle>상품명</InputTitle>
-          <BottomSheetTextInput
+          <TextInput
             style={{
               padding: 10,
               borderRadius: 10,
@@ -88,7 +91,7 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
         </InputWrapper>
         <InputWrapper>
           <InputTitle>가격</InputTitle>
-          <BottomSheetTextInput
+          <TextInput
             style={{
               padding: 10,
               borderRadius: 10,
@@ -117,7 +120,7 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
               setDatePickerOpen(false);
             }}
           />
-          <InputTitle>{date.toLocaleDateString()}</InputTitle>
+          <InputTitle>{new Date(date).toLocaleDateString()}</InputTitle>
         </InputWrapper>
         <TouchableOpacity
           style={{
@@ -132,7 +135,7 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
           <Text>Update!!</Text>
         </TouchableOpacity>
       </Wrapper>
-    </SafeAreaView>
+    </Modal>
   );
 };
 
