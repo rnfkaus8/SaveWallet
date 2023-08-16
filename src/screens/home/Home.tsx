@@ -205,6 +205,7 @@ const Home = () => {
   const handlePressSubmitEditItem = useCallback(async () => {
     await fetchItemList();
     setIsOpenHomeTableItemUpdateForm(false);
+    setSelectedItem(null);
   }, [fetchItemList]);
 
   const handlePressEditItemModalClose = useCallback(() => {
@@ -265,6 +266,10 @@ const Home = () => {
       selectedItem?.id,
     ],
   );
+
+  useEffect(() => {
+    console.log(selectedItem);
+  }, [selectedItem]);
 
   return (
     <Wrapper>

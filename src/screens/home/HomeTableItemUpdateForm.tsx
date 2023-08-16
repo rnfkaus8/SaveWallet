@@ -1,13 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Text, TextInput, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import { Item } from '../../model/Item';
+import { itemRepository } from '../../repository';
 
 const Wrapper = styled.View`
-  padding: 40px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: white;
+  padding: 20px;
 `;
 
 const InputWrapper = styled.View`
@@ -23,7 +26,7 @@ const InputTitle = styled.Text`
 `;
 
 interface HomeTableItemUpdateFormProps {
-  item: Item;
+  item: Item | null;
   onPressEdit: () => void;
   isOpenHomeTableItemUpdateForm: boolean;
   onRequestClose: () => void;
@@ -35,7 +38,9 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   isOpenHomeTableItemUpdateForm,
   onRequestClose,
 }) => {
-  const [date, setDate] = useState<Date>(item.boughtDate);
+  const [date, setDate] = useState<Date>(
+    item ? new Date(item.boughtDate) : new Date(),
+  );
   const [name, setName] = useState<string>(item ? item.name : '');
   const [price, setPrice] = useState<number>(item ? item.price : 0);
   const [priceStr, setPriceStr] = useState<string>(
@@ -50,11 +55,12 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
 
   const updateItem = useCallback(async () => {
     if (item) {
+      await itemRepository.update(item.id, name, price, date);
     }
-  }, [item]);
+  }, [date, item, name, price]);
 
-  const handlePressSubmit = useCallback(() => {
-    updateItem();
+  const handlePressSubmit = useCallback(async () => {
+    await updateItem();
     onPressEdit();
   }, [onPressEdit, updateItem]);
 
@@ -107,19 +113,22 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
           <TouchableOpacity onPress={handlePressDatePicker}>
             <InputTitle>날짜</InputTitle>
           </TouchableOpacity>
-          <DatePicker
-            modal
-            date={date}
-            open={datePrickerOpen}
-            mode="date"
-            onConfirm={(confirmedDate) => {
-              setDatePickerOpen(false);
-              setDate(confirmedDate);
-            }}
-            onCancel={() => {
-              setDatePickerOpen(false);
-            }}
-          />
+          {date && (
+            <DatePicker
+              modal
+              date={date}
+              open={datePrickerOpen}
+              mode="date"
+              onConfirm={(confirmedDate) => {
+                setDatePickerOpen(false);
+                setDate(confirmedDate);
+              }}
+              onCancel={() => {
+                setDatePickerOpen(false);
+              }}
+            />
+          )}
+
           <InputTitle>{new Date(date).toLocaleDateString()}</InputTitle>
         </InputWrapper>
         <TouchableOpacity

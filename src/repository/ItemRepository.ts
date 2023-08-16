@@ -60,12 +60,15 @@ export default class ItemRepository {
     price: number,
     boughtDate: Date,
   ): Promise<Item> => {
-    const axiosResponse = await axios.put<Item>('http://localhost:8080/item', {
-      id,
-      name,
-      price,
-      boughtDate,
-    });
+    const axiosResponse = await axios.patch<Item>(
+      'http://localhost:8080/item',
+      {
+        id,
+        name,
+        price,
+        boughtDate,
+      },
+    );
 
     if (axiosResponse.status === 200) {
       return axiosResponse.data;
