@@ -20,6 +20,19 @@ export default class GoalRepository {
     throw Error('목표 조회에 실패하였습니다.');
   };
 
+  updateSelectedMonthGoalPrice = async (id: number, price: number) => {
+    const axiosResponse = await axios.patch('http://localhost:8080/goal', {
+      id,
+      price,
+    });
+
+    if (axiosResponse.status === 200) {
+      return;
+    }
+
+    throw Error('목표 금액 수정에 실패하였습니다.');
+  };
+
   findByTargetMonth = async (targetMonth: string, memberId: number) => {
     const axiosResponse = await axios.get<Goal>('http://localhost:8080/goal', {
       params: {

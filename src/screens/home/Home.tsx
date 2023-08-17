@@ -88,6 +88,7 @@ const Home = () => {
   const [isOpenHomeTableItemForm, setIsOpenHomeTableItemForm] = useState(false);
   const [isOpenHomeTableItemUpdateForm, setIsOpenHomeTableItemUpdateForm] =
     useState(false);
+  const [isOpenGoalForm, setIsOpenGoalForm] = useState(false);
 
   const progressBarValue = useRef(new Animated.Value(0)).current;
 
@@ -122,7 +123,7 @@ const Home = () => {
       member.id,
     );
     setGoalPrice(findGoal.goalPrice);
-    console.log(findGoal);
+    setSelectedMonthGoal(findGoal);
   }, [member.id, selectedMonth]);
 
   useEffect(() => {
@@ -210,6 +211,19 @@ const Home = () => {
 
   const handlePressEditItemModalClose = useCallback(() => {
     setIsOpenHomeTableItemUpdateForm(false);
+  }, []);
+
+  const handlePressGoalFormModalOpen = useCallback(() => {
+    setIsOpenGoalForm(true);
+  }, []);
+
+  const handlePressUpdateGoal = useCallback(async () => {
+    await fetchGoal();
+    setIsOpenGoalForm(false);
+  }, [fetchGoal]);
+
+  const handlePressGoalFormModalClose = useCallback(() => {
+    setIsOpenGoalForm(false);
   }, []);
 
   const handlePressAddGoal = useCallback(() => {}, []);
@@ -367,10 +381,14 @@ const Home = () => {
         />
       )}
 
-      {/* <GoalForm */}
-      {/*  selectedMonthGoal={selectedMonthGoal} */}
-      {/*  onPressSubmit={handlePressGoal} */}
-      {/* /> */}
+      {isOpenGoalForm && (
+        <GoalForm
+          selectedMonthGoal={selectedMonthGoal}
+          onPressSubmit={handlePressUpdateGoal}
+          isOpenGoalForm={isOpenGoalForm}
+          onRequestClose={handlePressGoalFormModalClose}
+        />
+      )}
     </Wrapper>
   );
 };

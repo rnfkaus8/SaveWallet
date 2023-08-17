@@ -1,8 +1,12 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity } from 'react-native';
 import React, { useCallback, useState } from 'react';
+import Modal from 'react-native-modal';
 import { Goal } from '../../model/Goal';
+import { goalRepository } from '../../repository';
 
 interface GoalFormProps {
+  isOpenGoalForm: boolean;
+  onRequestClose: () => void;
   selectedMonthGoal: Goal | null;
   onPressSubmit: () => void;
 }
@@ -10,6 +14,8 @@ interface GoalFormProps {
 export const GoalForm: React.FC<GoalFormProps> = ({
   selectedMonthGoal,
   onPressSubmit,
+  isOpenGoalForm,
+  onRequestClose,
 }) => {
   const [goal, setGoal] = useState(
     selectedMonthGoal ? selectedMonthGoal.goalPrice : 0,
@@ -22,18 +28,28 @@ export const GoalForm: React.FC<GoalFormProps> = ({
     setGoal(parseInt(text.replace(/[^0-9]/g, ''), 10));
   }, []);
 
-  const handlePressSubmit = useCallback(() => {
+  const handlePressSubmit = useCallback(async () => {
     if (selectedMonthGoal) {
-      realm.write(() => {
-        selectedMonthGoal.goalPrice = goal;
-      });
+      await goalRepository.updateSelectedMonthGoalPrice(
+        selectedMonthGoal.id,
+        goal,
+      );
+      onPressSubmit();
     }
-    onPressSubmit();
-  }, [goal, onPressSubmit, realm, selectedMonthGoal]);
+  }, [goal, onPressSubmit, selectedMonthGoal]);
 
   return (
-    <View style={{ padding: 40 }}>
-      <BottomSheetTextInput
+    <Modal
+      isVisible={isOpenGoalForm}
+      onBackdropPress={onRequestClose}
+      onBackButtonPress={onRequestClose}
+      style={{ margin: 0, justifyContent: 'flex-end' }}
+      onSwipeComplete={onRequestClose}
+      useNativeDriverForBackdrop
+      useNativeDriver
+      swipeDirection="down"
+    >
+      <TextInput
         style={{
           padding: 10,
           borderRadius: 10,
@@ -55,6 +71,6 @@ export const GoalForm: React.FC<GoalFormProps> = ({
       >
         <Text>Submit!!</Text>
       </TouchableOpacity>
-    </View>
+    </Modal>
   );
 };
