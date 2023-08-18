@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { Member } from '../model/Member';
+import { Member, SerializeMemberProps } from '../model/Member';
 
 export default class MemberRepository {
-  login = async (name: string): Promise<Member> => {
-    const axiosResponse = await axios.get<Member>(
+  login = async (name: string): Promise<SerializeMemberProps> => {
+    const axiosResponse = await axios.get<SerializeMemberProps>(
       `http://localhost:8080/member/${name}`,
     );
 
