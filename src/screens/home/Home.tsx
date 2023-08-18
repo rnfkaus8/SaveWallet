@@ -281,10 +281,6 @@ const Home = () => {
     ],
   );
 
-  useEffect(() => {
-    console.log(selectedItem);
-  }, [selectedItem]);
-
   return (
     <Wrapper>
       <TouchableOpacity
