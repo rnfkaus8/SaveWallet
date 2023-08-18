@@ -2,9 +2,11 @@ import React, { useCallback, useState } from 'react';
 import { Alert, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { memberFetched } from '../../states/memberState';
 import { useNavigateToHome } from '../home/useNavigateToHome';
 import { memberRepository } from '../../repository';
+import { Member } from '../../model/Member';
 
 const Wrapper = styled.SafeAreaView`
   flex: 1;
@@ -36,7 +38,13 @@ export const Login = () => {
 
   const handlePressLogin = useCallback(async () => {
     try {
-      const member = await memberRepository.login(name);
+      const memberProps = await memberRepository.login(name);
+      const member = new Member(
+        memberProps.id,
+        memberProps.name,
+        memberProps.createdAt,
+        memberProps.updatedAt,
+      );
       dispatch(
         memberFetched({
           id: member.id,
@@ -45,6 +53,9 @@ export const Login = () => {
           createdAt: member.createdAt,
         }),
       );
+
+      const serializeMember = member.serialize();
+      await AsyncStorage.setItem('userInfo', serializeMember);
       navigateToHome();
     } catch (e) {
       Alert.alert('존재하지 않는 회원입니다.');
