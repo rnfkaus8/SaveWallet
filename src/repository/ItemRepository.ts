@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 import { Item } from '../model/Item';
 
 export default class ItemRepository {
@@ -7,16 +8,13 @@ export default class ItemRepository {
     startDate: Date,
     endDate: Date,
   ): Promise<Item[] | null> => {
-    const axiosResponse = await axios.get<Item[]>(
-      'http://localhost:8080/items',
-      {
-        params: {
-          memberId: id,
-          startDate,
-          endDate,
-        },
+    const axiosResponse = await axios.get<Item[]>(`${Config.API_URL}/items`, {
+      params: {
+        memberId: id,
+        startDate,
+        endDate,
       },
-    );
+    });
     if (axiosResponse.status === 200) {
       return axiosResponse.data;
     }
@@ -25,7 +23,7 @@ export default class ItemRepository {
 
   delete = async (id: number): Promise<string> => {
     const axiosResponse = await axios.delete<string>(
-      `http://localhost:8080/item/${id}`,
+      `${Config.API_URL}/item/${id}`,
     );
     if (axiosResponse.status === 200) {
       return axiosResponse.data;
@@ -40,7 +38,7 @@ export default class ItemRepository {
     memberId: number,
     boughtDate: Date,
   ): Promise<Item> => {
-    const axiosResponse = await axios.post<Item>('http://localhost:8080/item', {
+    const axiosResponse = await axios.post<Item>(`${Config.API_URL}/item`, {
       name,
       price,
       memberId,
@@ -60,15 +58,12 @@ export default class ItemRepository {
     price: number,
     boughtDate: Date,
   ): Promise<Item> => {
-    const axiosResponse = await axios.patch<Item>(
-      'http://localhost:8080/item',
-      {
-        id,
-        name,
-        price,
-        boughtDate,
-      },
-    );
+    const axiosResponse = await axios.patch<Item>(`${Config.API_URL}/item`, {
+      id,
+      name,
+      price,
+      boughtDate,
+    });
 
     if (axiosResponse.status === 200) {
       return axiosResponse.data;

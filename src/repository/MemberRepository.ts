@@ -1,10 +1,11 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 import { Member, SerializeMemberProps } from '../model/Member';
 
 export default class MemberRepository {
   login = async (name: string): Promise<SerializeMemberProps> => {
     const axiosResponse = await axios.get<SerializeMemberProps>(
-      `http://localhost:8080/member/${name}`,
+      `${Config.API_URL}/member/${name}`,
     );
 
     if (axiosResponse.status === 200) {

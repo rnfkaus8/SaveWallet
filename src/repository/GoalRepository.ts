@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 import { Goal } from '../model/Goal';
 
 export default class GoalRepository {
@@ -7,7 +8,7 @@ export default class GoalRepository {
     goalPrice: number,
     memberId: number,
   ): Promise<Goal> => {
-    const axiosResponse = await axios.put<Goal>('http://localhost:8080/goal', {
+    const axiosResponse = await axios.put<Goal>(`${Config.API_URL}/goal`, {
       targetMonth,
       goalPrice,
       memberId,
@@ -21,7 +22,7 @@ export default class GoalRepository {
   };
 
   updateSelectedMonthGoalPrice = async (id: number, price: number) => {
-    const axiosResponse = await axios.patch('http://localhost:8080/goal', {
+    const axiosResponse = await axios.patch(`${Config.API_URL}/goal`, {
       id,
       price,
     });
@@ -34,7 +35,7 @@ export default class GoalRepository {
   };
 
   findByTargetMonth = async (targetMonth: string, memberId: number) => {
-    const axiosResponse = await axios.get<Goal>('http://localhost:8080/goal', {
+    const axiosResponse = await axios.get<Goal>(`${Config.API_URL}/goal`, {
       params: {
         targetMonth,
         memberId,
