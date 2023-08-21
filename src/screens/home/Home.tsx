@@ -127,6 +127,7 @@ const Home = () => {
   }, [member.id, selectedMonth]);
 
   useEffect(() => {
+    setTotalPrice(0);
     fetchItemList();
     fetchGoal();
   }, [fetchGoal, fetchItemList]);
@@ -154,6 +155,7 @@ const Home = () => {
   const handlePressDelete = useCallback(
     async (itemId: number) => {
       await itemRepository.delete(itemId);
+      setTotalPrice(0);
       await fetchItemList();
     },
     [fetchItemList],
@@ -191,6 +193,7 @@ const Home = () => {
   }, []);
 
   const handlePressSubmitAddItem = useCallback(async () => {
+    setTotalPrice(0);
     await fetchItemList();
     setIsOpenHomeTableItemForm(false);
   }, [fetchItemList]);
@@ -204,6 +207,7 @@ const Home = () => {
   }, []);
 
   const handlePressSubmitEditItem = useCallback(async () => {
+    setTotalPrice(0);
     await fetchItemList();
     setIsOpenHomeTableItemUpdateForm(false);
     setSelectedItem(null);
