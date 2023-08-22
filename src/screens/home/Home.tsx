@@ -327,9 +327,9 @@ const Home = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onPress={handlePressAddGoal}
+          onPress={handlePressGoalFormModalOpen}
         >
-          <Text style={{ textAlign: 'center' }}>추가</Text>
+          <Text style={{ textAlign: 'center' }}>목표 수정</Text>
         </TouchableOpacity>
       </TotalPriceWrapper>
       <View style={{ padding: 20 }}>
