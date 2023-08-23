@@ -77,7 +77,6 @@ const AddItemButton = styled.TouchableOpacity`
 `;
 
 const Home = () => {
-  const [tableRow, setTableRow] = useState<Item[]>();
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<Date>(
@@ -106,14 +105,11 @@ const Home = () => {
       endOfDay(endOfMonth(selectedMonth)),
     );
     setItemList(items);
-    setTableRow(
-      items?.map((val: Item) => {
-        setTotalPrice((prev) => {
-          return prev + val.price;
-        });
-        return val;
-      }),
-    );
+    items?.forEach((item) => {
+      setTotalPrice((prev) => {
+        return prev + item.price;
+      });
+    });
   }, [member.id, selectedMonth]);
 
   const fetchGoal = useCallback(async () => {
@@ -357,7 +353,7 @@ const Home = () => {
             return `${item.id.toString()}_${index}`;
           }}
           style={{ padding: 10 }}
-          data={tableRow}
+          data={itemList}
           renderItem={renderItem}
         />
       </ListWrapper>
