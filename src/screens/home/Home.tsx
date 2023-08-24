@@ -9,11 +9,23 @@ import {
   View,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { endOfDay, endOfMonth, startOfDay, startOfMonth } from 'date-fns';
+import {
+  addMonths,
+  endOfDay,
+  endOfMonth,
+  startOfDay,
+  startOfMonth,
+  subMonths,
+} from 'date-fns';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { Item } from '../../model/Item';
-import { edit, trashcan } from '../../assets/resources/images';
+import {
+  edit,
+  roundArrowLeft,
+  roundArrowRight,
+  trashcan,
+} from '../../assets/resources/images';
 import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
@@ -61,8 +73,24 @@ const Wrapper = styled.SafeAreaView`
 `;
 
 const TotalPriceWrapper = styled.View`
-  padding: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  align-items: stretch;
+`;
+
+const PriceWrapper = styled.View`
+  display: flex;
+  padding: 0px 4px;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
   flex-direction: row;
+  margin-bottom: 8px;
+  margin-top: 8px;
+`;
+
+const GoalWrapper = styled.TouchableOpacity`
+  align-items: center;
 `;
 
 const AddItemButton = styled.TouchableOpacity`
@@ -74,6 +102,15 @@ const AddItemButton = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: center;
+`;
+
+const HeaderWrapper = styled.View`
+  padding: 24px;
+`;
+
+const MonthWrapper = styled.View`
+  align-items: center;
+  flex-direction: row;
 `;
 
 const Home = () => {
@@ -228,6 +265,18 @@ const Home = () => {
 
   const handlePressAddGoal = useCallback(() => {}, []);
 
+  const handlePressMinusMonth = useCallback(() => {
+    setSelectedMonth((prev) => {
+      return subMonths(prev, 1);
+    });
+  }, []);
+
+  const handlePressPlusMonth = useCallback(() => {
+    setSelectedMonth((prev) => {
+      return addMonths(prev, 1);
+    });
+  }, []);
+
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<Item>) => {
       const isSelectedItem = selectedItem?.id.toString() === item.id.toString();
@@ -283,70 +332,102 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <TouchableOpacity
-        style={{ padding: 20, alignItems: 'center' }}
-        onPress={handlePressMonthPicker}
-      >
-        <Text style={{ fontSize: 20 }}>
-          {moment(selectedMonth).format('MM-YYYY')}
-        </Text>
-      </TouchableOpacity>
-      {isOpenMonthPicker && (
-        <MonthPicker
-          isOpenMonthPicker={isOpenMonthPicker}
-          onChangeSelectedMonth={handleChangeMonthDate}
-          onRequestClose={handleMonthPickerClose}
-          selectedMonth={selectedMonth}
-        />
-      )}
-      <TotalPriceWrapper>
-        <View style={{ flex: 1 }}>
-          <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bold' }}>
-            목표 금액
-          </Text>
-          <Text style={{ textAlign: 'left', fontSize: 15 }}>{goalPrice}</Text>
-        </View>
-        <View style={{ flex: 1 }}>
+      <HeaderWrapper>
+        <MonthWrapper>
+          <TouchableOpacity onPress={handlePressMinusMonth}>
+            <Image source={roundArrowLeft} width={28} height={28} />
+          </TouchableOpacity>
           <Text
-            style={{ textAlign: 'right', fontSize: 15, fontWeight: 'bold' }}
-          >
-            사용 금액
-          </Text>
-          <Text style={{ textAlign: 'right', fontSize: 15 }}>{totalPrice}</Text>
-        </View>
-
-        <TouchableOpacity
-          style={{
-            marginLeft: 30,
-            flex: 0.5,
-            backgroundColor: 'gray',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={handlePressGoalFormModalOpen}
-        >
-          <Text style={{ textAlign: 'center' }}>목표 수정</Text>
-        </TouchableOpacity>
-      </TotalPriceWrapper>
-      <View style={{ padding: 20 }}>
-        <View
-          style={{
-            width: '100%',
-            height: 8,
-            backgroundColor: '#F0F0F0',
-            borderRadius: 10,
-          }}
-        >
-          <Animated.View
             style={{
-              width: progressBarWidth,
-              height: 8,
-              backgroundColor: '#AAC9CE',
-              borderRadius: 10,
+              color: '#121212',
+              fontFamily: 'Pretendard',
+              fontSize: 18,
+              fontStyle: 'normal',
+              fontWeight: '700',
+              lineHeight: 25.2,
             }}
-          />
-        </View>
-      </View>
+          >
+            {moment(selectedMonth).month()}월 소비
+          </Text>
+          <TouchableOpacity onPress={handlePressPlusMonth}>
+            <Image source={roundArrowRight} width={28} height={28} />
+          </TouchableOpacity>
+        </MonthWrapper>
+        {/* <TouchableOpacity onPress={handlePressMonthPicker}> */}
+        {/*  <Text style={{ fontSize: 20 }}> */}
+        {/*    {moment(selectedMonth).format('MM-YYYY')} */}
+        {/*  </Text> */}
+        {/* </TouchableOpacity> */}
+        {/* {isOpenMonthPicker && ( */}
+        {/*  <MonthPicker */}
+        {/*    isOpenMonthPicker={isOpenMonthPicker} */}
+        {/*    onChangeSelectedMonth={handleChangeMonthDate} */}
+        {/*    onRequestClose={handleMonthPickerClose} */}
+        {/*    selectedMonth={selectedMonth} */}
+        {/*  /> */}
+        {/* )} */}
+        <TotalPriceWrapper>
+          <Text
+            style={{
+              color: '#888',
+              fontFamily: 'Pretendard',
+              fontSize: 15,
+              fontStyle: 'normal',
+              fontWeight: '500',
+              lineHeight: 22.5,
+            }}
+          >
+            총 소비 금액
+          </Text>
+          <PriceWrapper>
+            <Text
+              style={{
+                color: '#121212',
+                fontFamily: 'Pretendard',
+                fontSize: 28,
+                fontStyle: 'normal',
+                fontWeight: '700',
+                lineHeight: 42,
+              }}
+            >
+              {totalPrice.toLocaleString()}원
+            </Text>
+            <GoalWrapper onPress={handlePressGoalFormModalOpen}>
+              <Text
+                style={{
+                  textAlign: 'right',
+                  color: '#888',
+                  fontFamily: 'Pretendard',
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '600',
+                  lineHeight: 24,
+                }}
+              >
+                {goalPrice.toLocaleString()}원 {'>'}
+              </Text>
+            </GoalWrapper>
+          </PriceWrapper>
+          <View
+            style={{
+              width: '100%',
+              height: 22,
+              backgroundColor: '#C1C1C1',
+              borderRadius: 8,
+            }}
+          >
+            <Animated.View
+              style={{
+                width: progressBarWidth,
+                height: 22,
+                backgroundColor: '#ECECEC',
+                borderRadius: 8,
+              }}
+            />
+          </View>
+        </TotalPriceWrapper>
+      </HeaderWrapper>
+      <View style={{ backgroundColor: '#F4F4F4', height: 8 }} />
       <ListWrapper>
         <FlatList
           keyExtractor={(item, index) => {
