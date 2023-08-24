@@ -29,7 +29,11 @@ export const RootNavigation = () => {
         {!isAuthInitialize && (
           <Stack.Screen name={RouteName.Login} component={Login} />
         )}
-        <Stack.Screen name={RouteName.Home} component={Home} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name={RouteName.Home}
+          component={Home}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
