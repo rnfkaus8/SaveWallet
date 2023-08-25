@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Animated,
   FlatList,
@@ -38,7 +44,7 @@ import { goalRepository, itemRepository } from '../../repository';
 
 const ListWrapper = styled.View`
   flex: 1;
-  padding-bottom: 50px;
+  padding: 24px 20px;
 `;
 
 const RowWrapper = styled.TouchableOpacity`
@@ -205,22 +211,6 @@ const Home = () => {
     [],
   );
 
-  const handlePressMonthPicker = useCallback(() => {
-    setIsOpenMonthPicker(true);
-  }, []);
-
-  const handleChangeMonthDate = useCallback(
-    (newDate: Date) => {
-      setIsOpenMonthPicker(false);
-      setSelectedMonth(newDate || selectedMonth);
-    },
-    [selectedMonth],
-  );
-
-  const handleMonthPickerClose = useCallback(() => {
-    setIsOpenMonthPicker(false);
-  }, []);
-
   const handlePressAddItemModalOpen = useCallback(() => {
     setIsOpenHomeTableItemForm(true);
   }, []);
@@ -263,8 +253,6 @@ const Home = () => {
     setIsOpenGoalForm(false);
   }, []);
 
-  const handlePressAddGoal = useCallback(() => {}, []);
-
   const handlePressMinusMonth = useCallback(() => {
     setSelectedMonth((prev) => {
       return subMonths(prev, 1);
@@ -275,6 +263,48 @@ const Home = () => {
     setSelectedMonth((prev) => {
       return addMonths(prev, 1);
     });
+  }, []);
+
+  const listEmptyComponent = useMemo(() => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text
+          style={{
+            textAlign: 'right',
+            color: '#555',
+            fontFamily: 'Pretendard',
+            fontSize: 15,
+            fontStyle: 'normal',
+            fontWeight: '500',
+            lineHeight: 22.5,
+          }}
+        >
+          아직 등록 된 소비 목록이 없어요.
+        </Text>
+      </View>
+    );
+  }, []);
+  const listHeaderComponent = useMemo(() => {
+    return (
+      <Text
+        style={{
+          color: '#555',
+          fontFamily: 'Pretendard',
+          fontSize: 14,
+          fontStyle: 'normal',
+          fontWeight: '700',
+          lineHeight: 21,
+        }}
+      >
+        내 소비 목록
+      </Text>
+    );
   }, []);
 
   const renderItem = useCallback(
@@ -353,19 +383,6 @@ const Home = () => {
             <Image source={roundArrowRight} width={28} height={28} />
           </TouchableOpacity>
         </MonthWrapper>
-        {/* <TouchableOpacity onPress={handlePressMonthPicker}> */}
-        {/*  <Text style={{ fontSize: 20 }}> */}
-        {/*    {moment(selectedMonth).format('MM-YYYY')} */}
-        {/*  </Text> */}
-        {/* </TouchableOpacity> */}
-        {/* {isOpenMonthPicker && ( */}
-        {/*  <MonthPicker */}
-        {/*    isOpenMonthPicker={isOpenMonthPicker} */}
-        {/*    onChangeSelectedMonth={handleChangeMonthDate} */}
-        {/*    onRequestClose={handleMonthPickerClose} */}
-        {/*    selectedMonth={selectedMonth} */}
-        {/*  /> */}
-        {/* )} */}
         <TotalPriceWrapper>
           <Text
             style={{
@@ -433,9 +450,12 @@ const Home = () => {
           keyExtractor={(item, index) => {
             return `${item.id.toString()}_${index}`;
           }}
-          style={{ padding: 10 }}
+          contentContainerStyle={{ flexGrow: 1 }}
           data={itemList}
           renderItem={renderItem}
+          ListHeaderComponent={listHeaderComponent}
+          ListHeaderComponentStyle={{ marginBottom: 12 }}
+          ListEmptyComponent={listEmptyComponent}
         />
       </ListWrapper>
       <AddItemButton onPress={handlePressAddItemModalOpen}>
