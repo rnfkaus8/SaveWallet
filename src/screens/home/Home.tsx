@@ -25,6 +25,7 @@ import {
 } from 'date-fns';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import ActionButton from 'react-native-action-button';
 import { Item } from '../../model/Item';
 import {
   edit,
@@ -486,6 +487,10 @@ const Home = () => {
           onRequestClose={handlePressGoalFormModalClose}
         />
       )}
+      <ActionButton
+        onPress={handlePressAddItemModalOpen}
+        buttonColor="rgba(173, 173, 173, 1)"
+      />
     </Wrapper>
   );
 };
