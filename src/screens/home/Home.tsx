@@ -37,7 +37,6 @@ import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { GoalForm } from './GoalForm';
-import { MonthPicker } from '../../common/components/MonthPicker';
 import { Goal, GOAL_TARGET_MONTH_FORMAT } from '../../model/Goal';
 import { RootState } from '../../store';
 import { MemberState } from '../../states/memberState';
@@ -82,12 +81,11 @@ const Wrapper = styled.SafeAreaView`
 const TotalPriceWrapper = styled.View`
   justify-content: center;
   align-items: flex-start;
-  align-items: stretch;
 `;
 
 const PriceWrapper = styled.View`
   display: flex;
-  padding: 0px 4px;
+  padding: 0 4px;
   justify-content: space-between;
   align-items: flex-end;
   align-self: stretch;
@@ -97,17 +95,6 @@ const PriceWrapper = styled.View`
 `;
 
 const GoalWrapper = styled.TouchableOpacity`
-  align-items: center;
-`;
-
-const AddItemButton = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  background-color: gray;
-  flex: 1;
-  justify-content: center;
   align-items: center;
 `;
 
@@ -127,7 +114,6 @@ const Home = () => {
     startOfMonth(new Date()),
   );
 
-  const [isOpenMonthPicker, setIsOpenMonthPicker] = useState(false);
   const [isOpenHomeTableItemForm, setIsOpenHomeTableItemForm] = useState(false);
   const [isOpenHomeTableItemUpdateForm, setIsOpenHomeTableItemUpdateForm] =
     useState(false);
@@ -459,9 +445,6 @@ const Home = () => {
           ListEmptyComponent={listEmptyComponent}
         />
       </ListWrapper>
-      <AddItemButton onPress={handlePressAddItemModalOpen}>
-        <Text>Add Item!!!</Text>
-      </AddItemButton>
       {isOpenHomeTableItemForm && (
         <HomeTableItemForm
           onPressSubmitItem={handlePressSubmitAddItem}
