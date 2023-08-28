@@ -41,6 +41,7 @@ import { Goal, GOAL_TARGET_MONTH_FORMAT } from '../../model/Goal';
 import { RootState } from '../../store';
 import { MemberState } from '../../states/memberState';
 import { goalRepository, itemRepository } from '../../repository';
+import { HorizontalSpacer } from '../../common/components/HorizontalSpacer';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -94,16 +95,28 @@ const PriceWrapper = styled.View`
   margin-top: 8px;
 `;
 
-const GoalWrapper = styled.TouchableOpacity`
+const TabWrapper = styled.View`
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  align-self: stretch;
 `;
 
-const HeaderWrapper = styled.View`
-  padding: 24px;
+const Tab = styled.TouchableOpacity<{ isSelected: boolean }>`
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background-color: ${(props) => {
+    return props.isSelected ? '#424242' : '#ECECEC';
+  }};
 `;
+
+const HeaderWrapper = styled.View``;
 
 const MonthWrapper = styled.View`
   align-items: center;
+  justify-content: center;
   flex-direction: row;
 `;
 
@@ -113,6 +126,9 @@ const Home = () => {
   const [selectedMonth, setSelectedMonth] = useState<Date>(
     startOfMonth(new Date()),
   );
+
+  const [isSelectedGraphTab, setIsSelectedGraphTab] = useState(true);
+  const [isSelectedListTab, setIsSelectedListTab] = useState(false);
 
   const [isOpenHomeTableItemForm, setIsOpenHomeTableItemForm] = useState(false);
   const [isOpenHomeTableItemUpdateForm, setIsOpenHomeTableItemUpdateForm] =
@@ -343,6 +359,16 @@ const Home = () => {
     ],
   );
 
+  const handlePressTab = useCallback((isSelectGraphTab: boolean) => {
+    if (isSelectGraphTab) {
+      setIsSelectedGraphTab(true);
+      setIsSelectedListTab(false);
+      return;
+    }
+    setIsSelectedGraphTab(false);
+    setIsSelectedListTab(true);
+  }, []);
+
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -360,87 +386,55 @@ const Home = () => {
               lineHeight: 25.2,
             }}
           >
-            {moment(selectedMonth).month()}월 소비
+            {moment(selectedMonth).format('M')}월 소비
           </Text>
           <TouchableOpacity onPress={handlePressPlusMonth}>
             <Image source={roundArrowRight} width={28} height={28} />
           </TouchableOpacity>
         </MonthWrapper>
-        <TotalPriceWrapper>
+      </HeaderWrapper>
+      <VerticalSpacer size={48} />
+      <TabWrapper>
+        <Tab
+          isSelected={isSelectedGraphTab}
+          onPress={() => {
+            return handlePressTab(true);
+          }}
+        >
           <Text
             style={{
-              color: '#888',
+              color: isSelectedGraphTab ? '#fff' : '#797979',
               fontFamily: 'Pretendard',
-              fontSize: 15,
+              fontSize: 16,
               fontStyle: 'normal',
-              fontWeight: '500',
-              lineHeight: 22.5,
+              fontWeight: '700',
+              lineHeight: 22.4,
             }}
           >
-            총 소비 금액
+            소비 그래프
           </Text>
-          <PriceWrapper>
-            <Text
-              style={{
-                color: '#121212',
-                fontFamily: 'Pretendard',
-                fontSize: 28,
-                fontStyle: 'normal',
-                fontWeight: '700',
-                lineHeight: 42,
-              }}
-            >
-              {totalPrice.toLocaleString()}원
-            </Text>
-            <GoalWrapper onPress={handlePressGoalFormModalOpen}>
-              <Text
-                style={{
-                  textAlign: 'right',
-                  color: '#888',
-                  fontFamily: 'Pretendard',
-                  fontSize: 16,
-                  fontStyle: 'normal',
-                  fontWeight: '600',
-                  lineHeight: 24,
-                }}
-              >
-                {goalPrice.toLocaleString()}원 {'>'}
-              </Text>
-            </GoalWrapper>
-          </PriceWrapper>
-          <View
+        </Tab>
+        <HorizontalSpacer size={12} />
+        <Tab
+          isSelected={isSelectedListTab}
+          onPress={() => {
+            return handlePressTab(false);
+          }}
+        >
+          <Text
             style={{
-              width: '100%',
-              height: 22,
-              backgroundColor: '#C1C1C1',
-              borderRadius: 8,
+              color: isSelectedListTab ? '#fff' : '#797979',
+              fontFamily: 'Pretendard',
+              fontSize: 16,
+              fontStyle: 'normal',
+              fontWeight: '700',
+              lineHeight: 22.4,
             }}
           >
-            <Animated.View
-              style={{
-                width: progressBarWidth,
-                height: 22,
-                backgroundColor: '#ECECEC',
-                borderRadius: 8,
-              }}
-            />
-          </View>
-        </TotalPriceWrapper>
-      </HeaderWrapper>
-      <View style={{ backgroundColor: '#F4F4F4', height: 8 }} />
-      <ListWrapper>
-        <FlatList
-          keyExtractor={(item, index) => {
-            return `${item.id.toString()}_${index}`;
-          }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          data={itemList}
-          renderItem={renderItem}
-          ListHeaderComponent={listHeaderComponent}
-          ListHeaderComponentStyle={{ marginBottom: 12 }}
-          ListEmptyComponent={listEmptyComponent}
-        />
-      </ListWrapper>
+            소비 목록
+          </Text>
+        </Tab>
+      </TabWrapper>
       {isOpenHomeTableItemForm && (
         <HomeTableItemForm
           onPressSubmitItem={handlePressSubmitAddItem}
