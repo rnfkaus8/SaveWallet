@@ -26,6 +26,7 @@ import {
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import ActionButton from 'react-native-action-button';
+import PieChart from 'react-native-pie-chart';
 import { Item } from '../../model/Item';
 import {
   edit,
@@ -435,6 +436,15 @@ const Home = () => {
           </Text>
         </Tab>
       </TabWrapper>
+      <VerticalSpacer size={48} />
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <PieChart
+          widthAndHeight={280}
+          series={[50, 30, 20]}
+          sliceColor={['#467AFF', '#FFD542', '#FF5757']}
+          coverRadius={0.5}
+        />
+      </View>
       {isOpenHomeTableItemForm && (
         <HomeTableItemForm
           onPressSubmitItem={handlePressSubmitAddItem}
