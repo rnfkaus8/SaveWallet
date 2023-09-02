@@ -1,3 +1,7 @@
+export interface TotalPriceByCategory {
+  totalPrice: number;
+  categoryName: string;
+}
 export class Item {
   private _id: number;
 

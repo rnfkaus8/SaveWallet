@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import { Item } from '../model/Item';
+import { Item, TotalPriceByCategory } from '../model/Item';
 
 export default class ItemRepository {
   getItemList = async (
@@ -21,6 +21,29 @@ export default class ItemRepository {
     return null;
   };
 
+  getTotalPriceByCategory = async (
+    id: number,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<TotalPriceByCategory[] | null> => {
+    const axiosResponse = await axios.get<TotalPriceByCategory[]>(
+      `${Config.API_URL}/items/total-price`,
+      {
+        params: {
+          memberId: id,
+          startDate,
+          endDate,
+        },
+      },
+    );
+
+    if (axiosResponse.status === 200) {
+      return axiosResponse.data;
+    }
+
+    return null;
+  };
+
   delete = async (id: number): Promise<string> => {
     const axiosResponse = await axios.delete<string>(
       `${Config.API_URL}/item/${id}`,
@@ -37,12 +60,15 @@ export default class ItemRepository {
     price: number,
     memberId: number,
     boughtDate: Date,
+    categoryId: number,
   ): Promise<Item> => {
+    console.log(categoryId);
     const axiosResponse = await axios.post<Item>(`${Config.API_URL}/item`, {
       name,
       price,
       memberId,
       boughtDate,
+      categoryId,
     });
 
     if (axiosResponse.status === 200) {
