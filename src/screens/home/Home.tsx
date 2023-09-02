@@ -41,8 +41,13 @@ import { GoalForm } from './GoalForm';
 import { Goal, GOAL_TARGET_MONTH_FORMAT } from '../../model/Goal';
 import { RootState } from '../../store';
 import { MemberState } from '../../states/memberState';
-import { goalRepository, itemRepository } from '../../repository';
+import {
+  categoryRepository,
+  goalRepository,
+  itemRepository,
+} from '../../repository';
 import { HorizontalSpacer } from '../../common/components/HorizontalSpacer';
+import { Category } from '../../model/Category';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -121,6 +126,8 @@ const MonthWrapper = styled.View`
   flex-direction: row;
 `;
 
+const pieChartColorList = ['#467AFF', '#FFD542', '#FF5757'];
+
 const Home = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -144,19 +151,36 @@ const Home = () => {
   const member = useSelector<RootState, MemberState>((state: RootState) => {
     return state.member;
   });
+  const [categories, setCategories] = useState<Category[] | null>(null);
+
+  const [pieChartInfo, setPieChartInfo] = useState<{
+    series: number[];
+    sliceColor: string[];
+  }>({ series: [100], sliceColor: ['#467AFF'] });
+
+  const fetchCategories = useCallback(async () => {
+    const categories = await categoryRepository.findByMemberId(member.id);
+    setCategories(categories);
+  }, [member.id]);
 
   const fetchItemList = useCallback(async () => {
-    const items = await itemRepository.getItemList(
-      member.id,
-      startOfDay(startOfMonth(selectedMonth)),
-      endOfDay(endOfMonth(selectedMonth)),
-    );
-    setItemList(items);
-    let totalPrice = 0;
-    items?.forEach((item) => {
-      totalPrice += item.price;
-    });
-    setTotalPrice(totalPrice);
+    try {
+      const items = await itemRepository.getItemList(
+        member.id,
+        startOfDay(startOfMonth(selectedMonth)),
+        endOfDay(endOfMonth(selectedMonth)),
+      );
+      console.log(items);
+      setItemList(items);
+
+      let totalPrice = 0;
+      items?.forEach((item) => {
+        totalPrice += item.price;
+      });
+      setTotalPrice(totalPrice);
+    } catch (e) {
+      console.error(e);
+    }
   }, [member.id, selectedMonth]);
 
   const fetchGoal = useCallback(async () => {
@@ -169,30 +193,36 @@ const Home = () => {
     setSelectedMonthGoal(findGoal);
   }, [member.id, selectedMonth]);
 
+  const fetchTotalPriceByCategory = useCallback(async () => {
+    const totalPriceByCategories = await itemRepository.getTotalPriceByCategory(
+      member.id,
+      startOfDay(startOfMonth(selectedMonth)),
+      endOfDay(endOfMonth(selectedMonth)),
+    );
+
+    if (totalPriceByCategories && totalPriceByCategories.length !== 0) {
+      console.log(totalPriceByCategories.length);
+      let totalPrice = 0;
+      totalPriceByCategories.forEach((data) => {
+        totalPrice += data.totalPrice;
+      });
+      const sliceColor = pieChartColorList.slice(
+        0,
+        totalPriceByCategories.length - 1,
+      );
+      const series = totalPriceByCategories.map((data) => {
+        return (100 * data.totalPrice) / totalPrice;
+      });
+      // setPieChartInfo({ series, sliceColor });
+    }
+  }, [member.id, selectedMonth]);
+
   useEffect(() => {
+    fetchCategories();
     fetchItemList();
-    fetchGoal();
-  }, [fetchGoal, fetchItemList]);
-
-  const loadProgressBar = useCallback(() => {
-    const toValue =
-      totalPrice / goalPrice >= 1 ? 100 : (totalPrice / goalPrice) * 100;
-    Animated.timing(progressBarValue, {
-      useNativeDriver: false,
-      toValue,
-      duration: 500,
-    }).start();
-  }, [goalPrice, progressBarValue, totalPrice]);
-
-  const progressBarWidth = progressBarValue.interpolate({
-    inputRange: [0, 100],
-    outputRange: ['0%', '100%'],
-    extrapolate: 'clamp',
-  });
-
-  useEffect(() => {
-    loadProgressBar();
-  }, [loadProgressBar]);
+    // fetchGoal();
+    fetchTotalPriceByCategory();
+  }, [fetchCategories, fetchItemList, fetchTotalPriceByCategory]);
 
   const handlePressDelete = useCallback(
     async (itemId: number) => {
@@ -219,8 +249,9 @@ const Home = () => {
 
   const handlePressSubmitAddItem = useCallback(async () => {
     await fetchItemList();
+    await fetchTotalPriceByCategory();
     setIsOpenHomeTableItemForm(false);
-  }, [fetchItemList]);
+  }, [fetchItemList, fetchTotalPriceByCategory]);
 
   const handleAddItemModalClose = useCallback(() => {
     setIsOpenHomeTableItemForm(false);
@@ -370,6 +401,10 @@ const Home = () => {
     setIsSelectedListTab(true);
   }, []);
 
+  useEffect(() => {
+    console.log(pieChartInfo);
+  }, [pieChartInfo]);
+
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -440,15 +475,16 @@ const Home = () => {
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <PieChart
           widthAndHeight={280}
-          series={[50, 30, 20]}
-          sliceColor={['#467AFF', '#FFD542', '#FF5757']}
+          series={pieChartInfo.series}
+          sliceColor={pieChartInfo.sliceColor}
           coverRadius={0.5}
         />
       </View>
-      {isOpenHomeTableItemForm && (
+      {isOpenHomeTableItemForm && categories && (
         <HomeTableItemForm
           onPressSubmitItem={handlePressSubmitAddItem}
           memberId={member.id}
+          categories={categories}
           isOpenHomeTableItemForm={isOpenHomeTableItemForm}
           onRequestClose={handleAddItemModalClose}
         />
