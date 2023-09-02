@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Text,
   TextInput,
@@ -10,14 +11,18 @@ import DatePicker from 'react-native-date-picker';
 import styled from 'styled-components/native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { ca } from 'date-fns/locale';
 import { itemRepository } from '../../repository';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
+import { Category } from '../../model/Category';
 
 interface HomeTableItemFormProps {
   onPressSubmitItem(): void;
   isOpenHomeTableItemForm: boolean;
   onRequestClose(): void;
   memberId: number;
+  categories: Category[];
 }
 
 const Wrapper = styled.View`
@@ -54,12 +59,20 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   isOpenHomeTableItemForm,
   onRequestClose,
   memberId,
+  categories,
 }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [priceStr, setPriceStr] = useState('');
   const [datePrickerOpen, setDatePickerOpen] = useState(false);
+  const [categoryId, setCategoryId] = useState<number>(0);
+  const [categoryList, setCategoryList] = useState(
+    categories.map((category) => {
+      return { label: category.name, value: category.id };
+    }),
+  );
+  const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
 
   const handleChangePrice = useCallback((text: string) => {
     setPriceStr(text);
@@ -67,8 +80,12 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   }, []);
 
   const saveItem = useCallback(async () => {
-    await itemRepository.save(name, price, memberId, date);
-  }, [date, memberId, name, price]);
+    try {
+      await itemRepository.save(name, price, memberId, date, categoryId);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [categoryId, date, memberId, name, price]);
 
   const handlePressSubmit = useCallback(async () => {
     await saveItem();
@@ -181,6 +198,21 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
               </Text>
             </TouchableOpacity>
           </DateWrapper>
+
+          {categories && (
+            <>
+              <VerticalSpacer size={24} />
+              <DropDownPicker
+                open={dropDownOpen}
+                value={categoryId}
+                items={categoryList}
+                setOpen={setDropDownOpen}
+                setValue={setCategoryId}
+                setItems={setCategoryList}
+                onPress={Keyboard.dismiss}
+              />
+            </>
+          )}
         </Wrapper>
         <TouchableOpacity
           style={{
