@@ -62,7 +62,6 @@ export default class ItemRepository {
     boughtDate: Date,
     categoryId: number,
   ): Promise<Item> => {
-    console.log(categoryId);
     const axiosResponse = await axios.post<Item>(`${Config.API_URL}/item`, {
       name,
       price,
