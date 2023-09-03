@@ -27,7 +27,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 import PieChart from 'react-native-pie-chart';
-import { Item } from '../../model/Item';
+import { Item, TotalPriceByCategory } from '../../model/Item';
 import {
   edit,
   roundArrowLeft,
@@ -48,6 +48,8 @@ import {
 } from '../../repository';
 import { HorizontalSpacer } from '../../common/components/HorizontalSpacer';
 import { Category } from '../../model/Category';
+import { HomeChart } from './HomeChart';
+import { HomeItem } from './HomeItem';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -143,9 +145,6 @@ const Home = () => {
     useState(false);
   const [isOpenGoalForm, setIsOpenGoalForm] = useState(false);
 
-  const progressBarValue = useRef(new Animated.Value(0)).current;
-
-  const [goalPrice, setGoalPrice] = useState(0);
   const [selectedMonthGoal, setSelectedMonthGoal] = useState<Goal | null>(null);
   const [itemList, setItemList] = useState<Item[] | null>(null);
   const member = useSelector<RootState, MemberState>((state: RootState) => {
@@ -157,6 +156,10 @@ const Home = () => {
     series: number[];
     sliceColor: string[];
   }>({ series: [100], sliceColor: ['#467AFF'] });
+
+  const [totalPriceByCategories, setTotalPriceByCategories] = useState<
+    TotalPriceByCategory[] | null
+  >(null);
 
   const fetchCategories = useCallback(async () => {
     const categories = await categoryRepository.findByMemberId(member.id);
@@ -170,7 +173,6 @@ const Home = () => {
         startOfDay(startOfMonth(selectedMonth)),
         endOfDay(endOfMonth(selectedMonth)),
       );
-      console.log(items);
       setItemList(items);
 
       let totalPrice = 0;
@@ -189,7 +191,6 @@ const Home = () => {
       200000,
       member.id,
     );
-    setGoalPrice(findGoal.goalPrice);
     setSelectedMonthGoal(findGoal);
   }, [member.id, selectedMonth]);
 
@@ -201,19 +202,19 @@ const Home = () => {
     );
 
     if (totalPriceByCategories && totalPriceByCategories.length !== 0) {
-      console.log(totalPriceByCategories.length);
       let totalPrice = 0;
+      setTotalPriceByCategories(totalPriceByCategories);
       totalPriceByCategories.forEach((data) => {
         totalPrice += data.totalPrice;
       });
       const sliceColor = pieChartColorList.slice(
         0,
-        totalPriceByCategories.length - 1,
+        totalPriceByCategories.length,
       );
       const series = totalPriceByCategories.map((data) => {
         return (100 * data.totalPrice) / totalPrice;
       });
-      // setPieChartInfo({ series, sliceColor });
+      setPieChartInfo({ series, sliceColor });
     }
   }, [member.id, selectedMonth]);
 
@@ -401,10 +402,6 @@ const Home = () => {
     setIsSelectedListTab(true);
   }, []);
 
-  useEffect(() => {
-    console.log(pieChartInfo);
-  }, [pieChartInfo]);
-
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -472,14 +469,13 @@ const Home = () => {
         </Tab>
       </TabWrapper>
       <VerticalSpacer size={48} />
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <PieChart
-          widthAndHeight={280}
-          series={pieChartInfo.series}
-          sliceColor={pieChartInfo.sliceColor}
-          coverRadius={0.5}
+      {isSelectedGraphTab && (
+        <HomeChart
+          pieChartInfo={pieChartInfo}
+          totalPriceByCategories={totalPriceByCategories}
         />
-      </View>
+      )}
+      {isSelectedListTab && <HomeItem />}
       {isOpenHomeTableItemForm && categories && (
         <HomeTableItemForm
           onPressSubmitItem={handlePressSubmitAddItem}
