@@ -1,6 +1,7 @@
 export interface TotalPriceByCategory {
   totalPrice: number;
   categoryName: string;
+  color: string;
 }
 export class Item {
   private _id: number;

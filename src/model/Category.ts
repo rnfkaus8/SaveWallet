@@ -3,6 +3,8 @@ export class Category {
 
   private _name: string;
 
+  private _color: string;
+
   get id(): number {
     return this._id;
   }
@@ -11,8 +13,13 @@ export class Category {
     return this._name;
   }
 
-  constructor(id: number, name: string) {
+  get color(): string {
+    return this._color;
+  }
+
+  constructor(id: number, name: string, color: string) {
     this._id = id;
     this._name = name;
+    this._color = color;
   }
 }

@@ -128,8 +128,6 @@ const MonthWrapper = styled.View`
   flex-direction: row;
 `;
 
-const pieChartColorList = ['#467AFF', '#FFD542', '#FF5757'];
-
 const Home = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -207,12 +205,11 @@ const Home = () => {
       totalPriceByCategories.forEach((data) => {
         totalPrice += data.totalPrice;
       });
-      const sliceColor = pieChartColorList.slice(
-        0,
-        totalPriceByCategories.length,
-      );
-      const series = totalPriceByCategories.map((data) => {
-        return (100 * data.totalPrice) / totalPrice;
+      const series: number[] = [];
+      const sliceColor: string[] = [];
+      totalPriceByCategories.forEach((data) => {
+        series.push((100 * data.totalPrice) / totalPrice);
+        sliceColor.push(data.color);
       });
       setPieChartInfo({ series, sliceColor });
     }
