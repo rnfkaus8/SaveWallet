@@ -16,6 +16,7 @@ import { ca } from 'date-fns/locale';
 import { itemRepository } from '../../repository';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { Category } from '../../model/Category';
+import UpArrow from '../../common/svg/UpArrow';
 
 interface HomeTableItemFormProps {
   onPressSubmitItem(): void;
@@ -111,6 +112,48 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
     >
       <KeyboardAvoidingView behavior="padding">
         <Wrapper>
+          {categories && (
+            <>
+              <InputWrapper>
+                <InputTitle>카테고리</InputTitle>
+                <VerticalSpacer size={12} />
+                <TouchableOpacity
+                  style={{
+                    padding: 16,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                    alignSelf: 'stretch',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: '#888',
+                      fontSize: 16,
+                      fontFamily: 'Pretendard',
+                      fontStyle: 'normal',
+                      fontWeight: '400',
+                      lineHeight: 24,
+                      flex: 1,
+                    }}
+                  >
+                    카테고리를 선택하세요.
+                  </Text>
+                  <UpArrow fillColor="#121212" />
+                </TouchableOpacity>
+                {/* <DropDownPicker */}
+                {/*  open={dropDownOpen} */}
+                {/*  value={categoryId} */}
+                {/*  items={categoryList} */}
+                {/*  setOpen={setDropDownOpen} */}
+                {/*  setValue={setCategoryId} */}
+                {/*  setItems={setCategoryList} */}
+                {/*  onPress={Keyboard.dismiss} */}
+                {/* /> */}
+              </InputWrapper>
+              <VerticalSpacer size={24} />
+            </>
+          )}
           <InputWrapper>
             <InputTitle>구매한 물건</InputTitle>
             <VerticalSpacer size={12} />
@@ -198,21 +241,6 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
               </Text>
             </TouchableOpacity>
           </DateWrapper>
-
-          {categories && (
-            <>
-              <VerticalSpacer size={24} />
-              <DropDownPicker
-                open={dropDownOpen}
-                value={categoryId}
-                items={categoryList}
-                setOpen={setDropDownOpen}
-                setValue={setCategoryId}
-                setItems={setCategoryList}
-                onPress={Keyboard.dismiss}
-              />
-            </>
-          )}
         </Wrapper>
         <TouchableOpacity
           style={{
