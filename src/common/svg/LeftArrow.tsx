@@ -2,7 +2,7 @@ import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { SvgProps } from './SvgProps';
 
-const UpArrow = ({ width, height, fillColor }: SvgProps) => {
+const LeftArrow = ({ width, height, fillColor }: SvgProps) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,9 +12,9 @@ const UpArrow = ({ width, height, fillColor }: SvgProps) => {
     >
       <Path
         fill="#121212"
-        d="M10.579 4.832 6.901 1.154a1.414 1.414 0 0 0-2.002 0L1.22 4.832c-.895.895-.256 2.429 1.008 2.429h7.356c1.264 0 1.889-1.534.994-2.429Z"
+        d="M15.332 9.323 11.654 13a1.413 1.413 0 0 0 0 2.002l3.678 3.678c.895.895 2.429.255 2.429-1.008v-7.356c0-1.264-1.534-1.89-2.428-.994Z"
       />
     </Svg>
   );
 };
-export default UpArrow;
+export default LeftArrow;
