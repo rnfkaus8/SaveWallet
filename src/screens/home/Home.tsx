@@ -26,14 +26,8 @@ import {
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import ActionButton from 'react-native-action-button';
-import PieChart from 'react-native-pie-chart';
 import { Item, TotalPriceByCategory } from '../../model/Item';
-import {
-  edit,
-  roundArrowLeft,
-  roundArrowRight,
-  trashcan,
-} from '../../assets/resources/images';
+import { edit, trashcan } from '../../assets/resources/images';
 import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
@@ -50,6 +44,8 @@ import { HorizontalSpacer } from '../../common/components/HorizontalSpacer';
 import { Category } from '../../model/Category';
 import { HomeChart } from './HomeChart';
 import { HomeItem } from './HomeItem';
+import LeftArrow from '../../common/svg/LeftArrow';
+import RightArrow from '../../common/svg/RightArrow';
 
 const ListWrapper = styled.View`
   flex: 1;
@@ -404,7 +400,7 @@ const Home = () => {
       <HeaderWrapper>
         <MonthWrapper>
           <TouchableOpacity onPress={handlePressMinusMonth}>
-            <Image source={roundArrowLeft} width={28} height={28} />
+            <LeftArrow width={28} height={28} fillColor="#121212" />
           </TouchableOpacity>
           <Text
             style={{
@@ -419,7 +415,7 @@ const Home = () => {
             {moment(selectedMonth).format('M')}월 소비
           </Text>
           <TouchableOpacity onPress={handlePressPlusMonth}>
-            <Image source={roundArrowRight} width={28} height={28} />
+            <RightArrow width={28} height={28} fillColor="#121212" />
           </TouchableOpacity>
         </MonthWrapper>
       </HeaderWrapper>
