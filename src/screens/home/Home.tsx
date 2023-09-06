@@ -155,6 +155,10 @@ const Home = () => {
     TotalPriceByCategory[] | null
   >(null);
 
+  const isLastMonth = useMemo(() => {
+    return startOfMonth(selectedMonth) === startOfMonth(new Date());
+  }, [selectedMonth]);
+
   const fetchCategories = useCallback(async () => {
     const categories = await categoryRepository.findByMemberId(member.id);
     setCategories(categories);
@@ -195,7 +199,10 @@ const Home = () => {
       endOfDay(endOfMonth(selectedMonth)),
     );
 
-    if (totalPriceByCategories && totalPriceByCategories.length !== 0) {
+    if (!totalPriceByCategories) {
+      return;
+    }
+    if (totalPriceByCategories.length !== 0) {
       let totalPrice = 0;
       setTotalPriceByCategories(totalPriceByCategories);
       totalPriceByCategories.forEach((data) => {
@@ -208,7 +215,11 @@ const Home = () => {
         sliceColor.push(data.color);
       });
       setPieChartInfo({ series, sliceColor });
+      return;
     }
+
+    setPieChartInfo({ series: [100], sliceColor: ['#467AFF'] });
+    setTotalPriceByCategories([]);
   }, [member.id, selectedMonth]);
 
   useEffect(() => {
@@ -415,7 +426,11 @@ const Home = () => {
             {moment(selectedMonth).format('M')}월 소비
           </Text>
           <TouchableOpacity onPress={handlePressPlusMonth}>
-            <RightArrow width={28} height={28} fillColor="#121212" />
+            <RightArrow
+              width={28}
+              height={28}
+              fillColor={isLastMonth ? '#121212' : '#BCBCBC'}
+            />
           </TouchableOpacity>
         </MonthWrapper>
       </HeaderWrapper>
