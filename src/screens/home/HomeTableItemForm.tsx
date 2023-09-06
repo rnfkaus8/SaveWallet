@@ -12,7 +12,6 @@ import styled from 'styled-components/native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { ca } from 'date-fns/locale';
 import { itemRepository } from '../../repository';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { Category } from '../../model/Category';
@@ -114,42 +113,22 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
         <Wrapper>
           {categories && (
             <>
-              <InputWrapper>
+              <InputWrapper style={{ zIndex: 1000 }}>
                 <InputTitle>카테고리</InputTitle>
                 <VerticalSpacer size={12} />
-                <TouchableOpacity
-                  style={{
-                    padding: 16,
-                    borderRadius: 8,
-                    alignItems: 'center',
-                    alignSelf: 'stretch',
-                    flexDirection: 'row',
+                <DropDownPicker
+                  open={dropDownOpen}
+                  value={categoryId}
+                  items={categoryList}
+                  setOpen={setDropDownOpen}
+                  setValue={setCategoryId}
+                  setItems={setCategoryList}
+                  onPress={Keyboard.dismiss}
+                  placeholder="카테고리를 선택하세요"
+                  listItemContainerStyle={{
+                    backgroundColor: '#F4F4F4',
                   }}
-                >
-                  <Text
-                    style={{
-                      color: '#888',
-                      fontSize: 16,
-                      fontFamily: 'Pretendard',
-                      fontStyle: 'normal',
-                      fontWeight: '400',
-                      lineHeight: 24,
-                      flex: 1,
-                    }}
-                  >
-                    카테고리를 선택하세요.
-                  </Text>
-                  <UpArrow fillColor="#121212" />
-                </TouchableOpacity>
-                {/* <DropDownPicker */}
-                {/*  open={dropDownOpen} */}
-                {/*  value={categoryId} */}
-                {/*  items={categoryList} */}
-                {/*  setOpen={setDropDownOpen} */}
-                {/*  setValue={setCategoryId} */}
-                {/*  setItems={setCategoryList} */}
-                {/*  onPress={Keyboard.dismiss} */}
-                {/* /> */}
+                />
               </InputWrapper>
               <VerticalSpacer size={24} />
             </>
@@ -171,7 +150,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                   fontFamily: 'Pretendard',
                   fontStyle: 'normal',
                   fontWeight: '400',
-                  lineHeight: 24,
+                  lineHeight: 24.0,
                 }}
                 onChangeText={setName}
                 placeholder="구매한 물건 이름을 적으세요."
@@ -197,7 +176,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                   fontFamily: 'Pretendard',
                   fontStyle: 'normal',
                   fontWeight: '400',
-                  lineHeight: 24,
+                  lineHeight: 24.0,
                 }}
                 placeholder="소비 금액을 적으세요"
                 keyboardType="number-pad"
@@ -233,7 +212,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                   fontSize: 16,
                   fontStyle: 'normal',
                   fontWeight: '400',
-                  lineHeight: 24,
+                  lineHeight: 24.0,
                   textAlign: 'right',
                 }}
               >
