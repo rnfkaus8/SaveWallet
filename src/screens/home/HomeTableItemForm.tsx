@@ -141,7 +141,6 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                 width: '100%',
                 padding: 16,
                 borderRadius: 8,
-                borderColor: '#F4F4F4',
               }}
             >
               <TextInput
@@ -151,9 +150,11 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                   fontStyle: 'normal',
                   fontWeight: '400',
                   lineHeight: 24.0,
+                  backgroundColor: '#F4F4F4',
                 }}
                 onChangeText={setName}
                 placeholder="구매한 물건 이름을 적으세요."
+                placeholderTextColor="#888888"
                 value={name}
               />
             </View>
@@ -167,7 +168,6 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                 width: '100%',
                 padding: 16,
                 borderRadius: 8,
-                borderColor: '#F4F4F4',
               }}
             >
               <TextInput
@@ -177,10 +177,12 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                   fontStyle: 'normal',
                   fontWeight: '400',
                   lineHeight: 24.0,
+                  backgroundColor: '#F4F4F4',
                 }}
                 placeholder="소비 금액을 적으세요"
                 keyboardType="number-pad"
                 onChangeText={handleChangePrice}
+                placeholderTextColor="#888888"
                 value={priceStr}
               />
             </View>
