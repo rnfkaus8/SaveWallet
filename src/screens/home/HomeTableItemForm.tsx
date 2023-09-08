@@ -15,7 +15,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { itemRepository } from '../../repository';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
 import { Category } from '../../model/Category';
-import UpArrow from '../../common/svg/UpArrow';
 
 interface HomeTableItemFormProps {
   onPressSubmitItem(): void;
