@@ -1,19 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {
-  Animated,
-  FlatList,
-  Image,
-  ListRenderItemInfo,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import {
   addMonths,
@@ -27,7 +13,6 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 import { Item, TotalPriceByCategory } from '../../model/Item';
-import { edit, trashcan } from '../../assets/resources/images';
 import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
@@ -47,56 +32,10 @@ import { HomeItem } from './HomeItem';
 import LeftArrow from '../../common/svg/LeftArrow';
 import RightArrow from '../../common/svg/RightArrow';
 
-const ListWrapper = styled.View`
-  flex: 1;
-  padding: 24px 20px;
-`;
-
-const RowWrapper = styled.TouchableOpacity`
-  border-radius: 10px;
-  border-width: 2px;
-  border-color: #000;
-  padding: 10px;
-  margin-bottom: 15px;
-  position: relative;
-`;
-
-const Row = styled.View`
-  flex: 1;
-  flex-direction: row;
-`;
-
-const ToggleWrapper = styled.View`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: white;
-  border-color: black;
-  border-width: 1px;
-  border-radius: 5px;
-  padding: 10px;
-`;
-
 const Wrapper = styled.SafeAreaView`
   flex: 1;
   background-color: white;
   position: relative;
-`;
-
-const TotalPriceWrapper = styled.View`
-  justify-content: center;
-  align-items: flex-start;
-`;
-
-const PriceWrapper = styled.View`
-  display: flex;
-  padding: 0 4px;
-  justify-content: space-between;
-  align-items: flex-end;
-  align-self: stretch;
-  flex-direction: row;
-  margin-bottom: 8px;
-  margin-top: 8px;
 `;
 
 const TabWrapper = styled.View`
@@ -237,17 +176,6 @@ const Home = () => {
     [fetchItemList],
   );
 
-  const handlePressItemRow = useCallback(
-    (isSelectedItem: boolean, item: Item) => {
-      if (isSelectedItem) {
-        setSelectedItem(null);
-        return;
-      }
-      setSelectedItem(item);
-    },
-    [],
-  );
-
   const handlePressAddItemModalOpen = useCallback(() => {
     setIsOpenHomeTableItemForm(true);
   }, []);
@@ -301,31 +229,17 @@ const Home = () => {
     });
   }, []);
 
-  const listEmptyComponent = useMemo(() => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text
-          style={{
-            textAlign: 'right',
-            color: '#555',
-            fontFamily: 'Pretendard',
-            fontSize: 15,
-            fontStyle: 'normal',
-            fontWeight: '500',
-            lineHeight: 22.5,
-          }}
-        >
-          아직 등록 된 소비 목록이 없어요.
-        </Text>
-      </View>
-    );
-  }, []);
+  const handlePressItemRow = useCallback(
+    (isSelectedItem: boolean, item: Item) => {
+      if (isSelectedItem) {
+        setSelectedItem(null);
+        return;
+      }
+      setSelectedItem(item);
+    },
+    [],
+  );
+
   const listHeaderComponent = useMemo(() => {
     return (
       <Text
@@ -342,59 +256,6 @@ const Home = () => {
       </Text>
     );
   }, []);
-
-  const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<Item>) => {
-      const isSelectedItem = selectedItem?.id.toString() === item.id.toString();
-      const itemCreatedDateStr = new Date(item.boughtDate).toLocaleDateString();
-      return (
-        <RowWrapper
-          onPress={() => {
-            handlePressItemRow(isSelectedItem, item);
-          }}
-        >
-          <Row>
-            <Text style={{ flex: 1, textAlign: 'left' }}>{item.name}</Text>
-            <Text style={{ flex: 1, textAlign: 'right' }}>{item.price}</Text>
-          </Row>
-          <VerticalSpacer size={10} />
-          <Row>
-            <Text style={{ flex: 1, textAlign: 'right' }}>
-              {itemCreatedDateStr}
-            </Text>
-          </Row>
-          <ToggleWrapper
-            style={{
-              display: isSelectedItem ? 'flex' : 'none',
-            }}
-          >
-            <TouchableOpacity
-              style={{ flexDirection: 'row' }}
-              onPress={() => {
-                handlePressDelete(item.id);
-              }}
-            >
-              <Image source={trashcan} style={{ width: 14, height: 14 }} />
-              <Text>삭제하기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ flexDirection: 'row' }}
-              onPress={handlePressEditItemModalOpen}
-            >
-              <Image source={edit} style={{ width: 14, height: 14 }} />
-              <Text>수정하기</Text>
-            </TouchableOpacity>
-          </ToggleWrapper>
-        </RowWrapper>
-      );
-    },
-    [
-      handlePressDelete,
-      handlePressEditItemModalOpen,
-      handlePressItemRow,
-      selectedItem?.id,
-    ],
-  );
 
   const handlePressTab = useCallback((isSelectGraphTab: boolean) => {
     if (isSelectGraphTab) {
@@ -483,7 +344,15 @@ const Home = () => {
           totalPriceByCategories={totalPriceByCategories}
         />
       )}
-      {isSelectedListTab && <HomeItem />}
+      {isSelectedListTab && (
+        <HomeItem
+          items={itemList}
+          onPressItemEditModalOpen={handlePressEditItemModalOpen}
+          onPressItemRow={handlePressItemRow}
+          onPressItemDelete={handlePressDelete}
+          selectedItem={selectedItem}
+        />
+      )}
       {isOpenHomeTableItemForm && categories && (
         <HomeTableItemForm
           onPressSubmitItem={handlePressSubmitAddItem}
