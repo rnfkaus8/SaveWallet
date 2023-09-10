@@ -12,6 +12,7 @@ import {
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import ActionButton from 'react-native-action-button';
+import Modal from 'react-native-modal';
 import { Item, TotalPriceByCategory } from '../../model/Item';
 import HomeTableItemForm from './HomeTableItemForm';
 import HomeTableItemUpdateForm from './HomeTableItemUpdateForm';
@@ -35,7 +36,6 @@ import RightArrow from '../../common/svg/RightArrow';
 const Wrapper = styled.SafeAreaView`
   flex: 1;
   background-color: white;
-  position: relative;
 `;
 
 const TabWrapper = styled.View`
@@ -77,6 +77,8 @@ const Home = () => {
   const [isOpenHomeTableItemUpdateForm, setIsOpenHomeTableItemUpdateForm] =
     useState(false);
   const [isOpenGoalForm, setIsOpenGoalForm] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
   const [selectedMonthGoal, setSelectedMonthGoal] = useState<Goal | null>(null);
   const [itemList, setItemList] = useState<Item[] | null>(null);
@@ -161,30 +163,37 @@ const Home = () => {
     setTotalPriceByCategories([]);
   }, [member.id, selectedMonth]);
 
+  const fetchingData = useCallback(async () => {
+    await fetchItemList();
+    await fetchTotalPriceByCategory();
+  }, [fetchItemList, fetchTotalPriceByCategory]);
+
   useEffect(() => {
     fetchCategories();
-    fetchItemList();
-    // fetchGoal();
-    fetchTotalPriceByCategory();
-  }, [fetchCategories, fetchItemList, fetchTotalPriceByCategory]);
+    fetchingData();
+  }, [fetchCategories, fetchingData]);
 
-  const handlePressDelete = useCallback(
-    async (itemId: number) => {
-      await itemRepository.delete(itemId);
-      await fetchItemList();
-    },
-    [fetchItemList],
-  );
+  const handlePressDelete = useCallback((itemId: number) => {
+    setIsOpenDeleteModal(true);
+    setSelectedItemId(itemId);
+  }, []);
+
+  const handlePressDeleteItemConfirm = useCallback(async () => {
+    if (selectedItemId) {
+      await itemRepository.delete(selectedItemId);
+      setIsOpenDeleteModal(false);
+      await fetchingData();
+    }
+  }, [fetchingData, selectedItemId]);
 
   const handlePressAddItemModalOpen = useCallback(() => {
     setIsOpenHomeTableItemForm(true);
   }, []);
 
   const handlePressSubmitAddItem = useCallback(async () => {
-    await fetchItemList();
-    await fetchTotalPriceByCategory();
+    await fetchingData();
     setIsOpenHomeTableItemForm(false);
-  }, [fetchItemList, fetchTotalPriceByCategory]);
+  }, [fetchingData]);
 
   const handleAddItemModalClose = useCallback(() => {
     setIsOpenHomeTableItemForm(false);
@@ -195,17 +204,13 @@ const Home = () => {
   }, []);
 
   const handlePressSubmitEditItem = useCallback(async () => {
-    await fetchItemList();
+    await fetchingData();
     setIsOpenHomeTableItemUpdateForm(false);
     setSelectedItem(null);
-  }, [fetchItemList]);
+  }, [fetchingData]);
 
   const handlePressEditItemModalClose = useCallback(() => {
     setIsOpenHomeTableItemUpdateForm(false);
-  }, []);
-
-  const handlePressGoalFormModalOpen = useCallback(() => {
-    setIsOpenGoalForm(true);
   }, []);
 
   const handlePressUpdateGoal = useCallback(async () => {
@@ -239,23 +244,6 @@ const Home = () => {
     },
     [],
   );
-
-  const listHeaderComponent = useMemo(() => {
-    return (
-      <Text
-        style={{
-          color: '#555',
-          fontFamily: 'Pretendard',
-          fontSize: 14,
-          fontStyle: 'normal',
-          fontWeight: '700',
-          lineHeight: 21,
-        }}
-      >
-        내 소비 목록
-      </Text>
-    );
-  }, []);
 
   const handlePressTab = useCallback((isSelectGraphTab: boolean) => {
     if (isSelectGraphTab) {
@@ -379,6 +367,108 @@ const Home = () => {
           onRequestClose={handlePressGoalFormModalClose}
         />
       )}
+
+      {isOpenDeleteModal && (
+        <Modal
+          isVisible={isOpenDeleteModal}
+          onBackdropPress={() => {
+            return setIsOpenDeleteModal(false);
+          }}
+          onBackButtonPress={() => {
+            return setIsOpenDeleteModal(false);
+          }}
+          style={{ margin: 0 }}
+          onSwipeComplete={() => {
+            return setIsOpenDeleteModal(false);
+          }}
+          useNativeDriverForBackdrop
+          useNativeDriver
+        >
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+              backgroundColor: '#fff',
+              height: 176,
+              width: 240,
+              padding: 20,
+              justifyContent: 'flex-end',
+              borderRadius: 16,
+            }}
+          >
+            <Text
+              style={{
+                color: '#000',
+                textAlign: 'center',
+                fontFamily: 'Pretendard',
+                fontSize: 17,
+                fontStyle: 'normal',
+                fontWeight: '400',
+                lineHeight: 25.5,
+              }}
+            >
+              삭제하실?
+            </Text>
+            <VerticalSpacer size={36} />
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  padding: 12,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 8,
+                  backgroundColor: '#6A6A6A',
+                }}
+                onPress={handlePressDeleteItemConfirm}
+              >
+                <Text
+                  style={{
+                    color: '#fff',
+                    textAlign: 'center',
+                    fontFamily: 'Pretendard',
+                    fontSize: 15,
+                    fontStyle: 'normal',
+                    fontWeight: '700',
+                    lineHeight: 22.5,
+                  }}
+                >
+                  네
+                </Text>
+              </TouchableOpacity>
+              <HorizontalSpacer size={8} />
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  padding: 12,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 8,
+                  backgroundColor: '#A6A6A6',
+                }}
+                onPress={() => {
+                  return setIsOpenDeleteModal(false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: '#fff',
+                    textAlign: 'center',
+                    fontFamily: 'Pretendard',
+                    fontSize: 15,
+                    fontStyle: 'normal',
+                    fontWeight: '700',
+                    lineHeight: 22.5,
+                  }}
+                >
+                  아니
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
+
       <ActionButton
         onPress={handlePressAddItemModalOpen}
         buttonColor="rgba(173, 173, 173, 1)"
