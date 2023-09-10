@@ -140,6 +140,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                 width: '100%',
                 padding: 16,
                 borderRadius: 8,
+                backgroundColor: '#F4F4F4',
               }}
             >
               <TextInput
@@ -167,6 +168,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                 width: '100%',
                 padding: 16,
                 borderRadius: 8,
+                backgroundColor: '#F4F4F4',
               }}
             >
               <TextInput
