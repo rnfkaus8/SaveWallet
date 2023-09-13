@@ -64,7 +64,6 @@ const MonthWrapper = styled.View`
 `;
 
 const Home = () => {
-  const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<Date>(
     startOfMonth(new Date()),
@@ -113,12 +112,6 @@ const Home = () => {
         endOfDay(endOfMonth(selectedMonth)),
       );
       setItemList(items);
-
-      let totalPrice = 0;
-      items?.forEach((item) => {
-        totalPrice += item.price;
-      });
-      setTotalPrice(totalPrice);
     } catch (e) {
       console.error(e);
     }
