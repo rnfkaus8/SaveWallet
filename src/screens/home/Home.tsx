@@ -222,10 +222,13 @@ const Home = () => {
   }, []);
 
   const handlePressPlusMonth = useCallback(() => {
+    if (isLastMonth) {
+      return;
+    }
     setSelectedMonth((prev) => {
       return addMonths(prev, 1);
     });
-  }, []);
+  }, [isLastMonth]);
 
   const handlePressItemRow = useCallback(
     (isSelectedItem: boolean, item: Item) => {
