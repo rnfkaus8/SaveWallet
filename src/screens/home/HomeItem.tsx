@@ -1,19 +1,16 @@
 import {
   FlatList,
-  Image,
   ListRenderItemInfo,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components/native';
 import moment from 'moment';
 import { Item } from '../../model/Item';
 import { VerticalSpacer } from '../../common/components/VerticalSpacer';
-import { edit, trashcan } from '../../assets/resources/images';
-import { itemRepository } from '../../repository';
 import MoreIcon from '../../common/svg/MoreIcon';
 
 const RowWrapper = styled.View`
