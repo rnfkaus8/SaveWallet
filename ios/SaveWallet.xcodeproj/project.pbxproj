@@ -495,6 +495,7 @@
 				DEVELOPMENT_TEAM = KP3S783X57;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SaveWallet/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "지갑을 지켜라";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -524,6 +525,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KP3S783X57;
 				INFOPLIST_FILE = SaveWallet/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "지갑을 지켜라";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
