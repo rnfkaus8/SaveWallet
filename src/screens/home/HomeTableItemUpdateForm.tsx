@@ -5,12 +5,13 @@ import styled from 'styled-components/native';
 import Modal from 'react-native-modal';
 import { Item } from '../../model/Item';
 import { itemRepository } from '../../repository';
+import { Category } from '../../model/Category';
 
 const Wrapper = styled.View`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   background-color: white;
-  padding: 20px;
+  padding: 32px 20px;
 `;
 
 const InputWrapper = styled.View`
@@ -30,6 +31,7 @@ interface HomeTableItemUpdateFormProps {
   onPressEdit: () => void;
   isOpenHomeTableItemUpdateForm: boolean;
   onRequestClose: () => void;
+  categories: Category[];
 }
 
 const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
@@ -37,6 +39,7 @@ const HomeTableItemUpdateForm: React.FC<HomeTableItemUpdateFormProps> = ({
   onPressEdit,
   isOpenHomeTableItemUpdateForm,
   onRequestClose,
+  categories,
 }) => {
   const [date, setDate] = useState<Date>(
     item ? new Date(item.boughtDate) : new Date(),
