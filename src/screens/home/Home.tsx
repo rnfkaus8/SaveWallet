@@ -346,12 +346,13 @@ const Home = () => {
           onRequestClose={handleAddItemModalClose}
         />
       )}
-      {isOpenHomeTableItemUpdateForm && (
+      {isOpenHomeTableItemUpdateForm && categories && (
         <HomeTableItemUpdateForm
           onPressEdit={handlePressSubmitEditItem}
           item={selectedItem}
           isOpenHomeTableItemUpdateForm={isOpenHomeTableItemUpdateForm}
           onRequestClose={handlePressEditItemModalClose}
+          categories={categories}
         />
       )}
 
