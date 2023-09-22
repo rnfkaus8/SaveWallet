@@ -5,6 +5,7 @@ import {
   addMonths,
   endOfDay,
   endOfMonth,
+  isSameMonth,
   startOfDay,
   startOfMonth,
   subMonths,
@@ -96,7 +97,7 @@ const Home = () => {
   >(null);
 
   const isLastMonth = useMemo(() => {
-    return startOfMonth(selectedMonth) === startOfMonth(new Date());
+    return isSameMonth(selectedMonth, new Date());
   }, [selectedMonth]);
 
   const fetchCategories = useCallback(async () => {
@@ -274,7 +275,7 @@ const Home = () => {
             <RightArrow
               width={28}
               height={28}
-              fillColor={isLastMonth ? '#121212' : '#BCBCBC'}
+              fillColor={isLastMonth ? '#BCBCBC' : '#121212'}
             />
           </TouchableOpacity>
         </MonthWrapper>
