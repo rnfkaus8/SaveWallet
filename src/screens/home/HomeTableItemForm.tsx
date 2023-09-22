@@ -53,6 +53,13 @@ const InputTitle = styled.Text`
   line-height: 24; /* 24px */
 `;
 
+const TextInputWrapper = styled.View`
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+`;
+
 const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
   onPressSubmitItem,
   isOpenHomeTableItemForm,
@@ -131,14 +138,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
           <InputWrapper>
             <InputTitle>구매한 물건</InputTitle>
             <VerticalSpacer size={12} />
-            <View
-              style={{
-                width: '100%',
-                padding: 16,
-                borderRadius: 8,
-                backgroundColor: '#F4F4F4',
-              }}
-            >
+            <TextInputWrapper>
               <TextInput
                 style={{
                   fontSize: 16,
@@ -153,20 +153,13 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                 placeholderTextColor="#888888"
                 value={name}
               />
-            </View>
+            </TextInputWrapper>
           </InputWrapper>
           <VerticalSpacer size={24} />
           <InputWrapper>
             <InputTitle>소비 금액</InputTitle>
             <VerticalSpacer size={12} />
-            <View
-              style={{
-                width: '100%',
-                padding: 16,
-                borderRadius: 8,
-                backgroundColor: '#F4F4F4',
-              }}
-            >
+            <TextInputWrapper>
               <TextInput
                 style={{
                   fontSize: 16,
@@ -182,7 +175,7 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
                 placeholderTextColor="#888888"
                 value={priceStr}
               />
-            </View>
+            </TextInputWrapper>
           </InputWrapper>
           <VerticalSpacer size={24} />
           <DateWrapper>
