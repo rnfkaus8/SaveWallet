@@ -110,28 +110,24 @@ const HomeTableItemForm: React.FC<HomeTableItemFormProps> = ({
     >
       <KeyboardAvoidingView behavior="padding">
         <Wrapper>
-          {categories && (
-            <>
-              <InputWrapper style={{ zIndex: 1000 }}>
-                <InputTitle>카테고리</InputTitle>
-                <VerticalSpacer size={12} />
-                <DropDownPicker
-                  open={dropDownOpen}
-                  value={categoryId}
-                  items={categoryList}
-                  setOpen={setDropDownOpen}
-                  setValue={setCategoryId}
-                  setItems={setCategoryList}
-                  onPress={Keyboard.dismiss}
-                  placeholder="카테고리를 선택하세요"
-                  listItemContainerStyle={{
-                    backgroundColor: '#F4F4F4',
-                  }}
-                />
-              </InputWrapper>
-              <VerticalSpacer size={24} />
-            </>
-          )}
+          <InputWrapper style={{ zIndex: 1000 }}>
+            <InputTitle>카테고리</InputTitle>
+            <VerticalSpacer size={12} />
+            <DropDownPicker
+              open={dropDownOpen}
+              value={categoryId}
+              items={categoryList}
+              setOpen={setDropDownOpen}
+              setValue={setCategoryId}
+              setItems={setCategoryList}
+              onPress={Keyboard.dismiss}
+              placeholder="카테고리를 선택하세요"
+              listItemContainerStyle={{
+                backgroundColor: '#F4F4F4',
+              }}
+            />
+          </InputWrapper>
+          <VerticalSpacer size={24} />
           <InputWrapper>
             <InputTitle>구매한 물건</InputTitle>
             <VerticalSpacer size={12} />
