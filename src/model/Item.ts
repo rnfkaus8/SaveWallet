@@ -16,6 +16,8 @@ export class Item {
 
   private _updatedAt: Date;
 
+  private _categoryId: number;
+
   get id(): number {
     return this._id;
   }
@@ -30,6 +32,10 @@ export class Item {
 
   get boughtDate(): Date {
     return this._boughtDate;
+  }
+
+  get categoryId(): number {
+    return this._categoryId;
   }
 
   get createdAt(): Date {
@@ -47,6 +53,7 @@ export class Item {
     boughtDate: Date,
     startedAt: Date,
     updatedAt: Date,
+    categoryId: number,
   ) {
     this._id = id;
     this._name = name;
@@ -54,5 +61,6 @@ export class Item {
     this._boughtDate = boughtDate;
     this._createdAt = startedAt;
     this._updatedAt = updatedAt;
+    this._categoryId = categoryId;
   }
 }
