@@ -4,12 +4,7 @@ import { SvgProps } from './SvgProps';
 
 const MoreIcon = ({ width, height, fillColor }: SvgProps) => {
   return (
-    <Svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
-      height={height}
-      fill="none"
-    >
+    <Svg width={width} height={height} fill="none">
       <Circle
         cx={10}
         cy={5.083}
