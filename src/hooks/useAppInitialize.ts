@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import { Member } from '../model/Member';
 import { memberFetched } from '../states/memberState';
-import { authInitialize } from '../states/authState';
 import { memberRepository } from '../repository';
 
 export const useAppInitialize = () => {
