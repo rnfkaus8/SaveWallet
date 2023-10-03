@@ -180,15 +180,17 @@ export const HomeItem: React.FC<HomeItemProps> = ({
       selectedItem?.id,
     ],
   );
+  const itemSeparatorComponent = () => {
+    return <VerticalSpacer size={12} />;
+  };
   return (
     <FlatList
       style={{ padding: 20 }}
       data={items}
       renderItem={renderItem}
       removeClippedSubviews={false}
-      ItemSeparatorComponent={() => {
-        return <VerticalSpacer size={12} />;
-      }}
+      contentContainerStyle={{ paddingBottom: 20 }}
+      ItemSeparatorComponent={itemSeparatorComponent}
     />
   );
 };
