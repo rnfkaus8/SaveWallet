@@ -356,7 +356,6 @@ const Home = () => {
           categories={categories}
         />
       )}
-
       {isOpenGoalForm && (
         <GoalForm
           selectedMonthGoal={selectedMonthGoal}
@@ -365,7 +364,6 @@ const Home = () => {
           onRequestClose={handlePressGoalFormModalClose}
         />
       )}
-
       {isOpenDeleteModal && (
         <Modal
           isVisible={isOpenDeleteModal}
@@ -466,7 +464,6 @@ const Home = () => {
           </View>
         </Modal>
       )}
-
       <ActionButton
         onPress={handlePressAddItemModalOpen}
         buttonColor="rgba(173, 173, 173, 1)"
