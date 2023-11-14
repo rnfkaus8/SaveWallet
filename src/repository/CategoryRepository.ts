@@ -1,17 +1,23 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 import { Category } from '../model/Category';
+import { ErrorResponse } from '../model/ErrorResponse';
 
 export default class CategoryRepository {
-  findByMemberId = async (memberId: number): Promise<Category[]> => {
-    const axiosResponse = await axios.get<Category[]>(
-      `${Config.API_URL}/categories/${memberId}`,
-    );
-
-    if (axiosResponse.status === 200) {
-      return axiosResponse.data;
+  findByMemberId = async (
+    memberId: number,
+  ): Promise<Category[] | ErrorResponse> => {
+    try {
+      const { data } = await axios.get<Category[]>(
+        `${Config.API_URL}/categories/${memberId}`,
+      );
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError<ErrorResponse>(e) && e.response) {
+        const { code, message } = e.response.data;
+        return new ErrorResponse(code, message);
+      }
+      return new ErrorResponse('500', '서버 에러입니다');
     }
-
-    throw Error('카테고리 조회에 실패하였습니다.');
   };
 }
