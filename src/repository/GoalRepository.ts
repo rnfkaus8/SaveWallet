@@ -1,24 +1,29 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 import { Goal } from '../model/Goal';
+import { ErrorResponse } from '../model/ErrorResponse';
 
 export default class GoalRepository {
   findGoalOrSaveWhenNotExist = async (
     targetMonth: string,
     goalPrice: number,
     memberId: number,
-  ): Promise<Goal> => {
-    const axiosResponse = await axios.put<Goal>(`${Config.API_URL}/goal`, {
-      targetMonth,
-      goalPrice,
-      memberId,
-    });
+  ): Promise<Goal | ErrorResponse> => {
+    try {
+      const { data } = await axios.put<Goal>(`${Config.API_URL}/goal`, {
+        targetMonth,
+        goalPrice,
+        memberId,
+      });
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError<ErrorResponse>(e) && e.response) {
+        const { code, message } = e.response.data;
+        return new ErrorResponse(code, message);
+      }
 
-    if (axiosResponse.status === 200) {
-      return axiosResponse.data;
+      return new ErrorResponse('500', '서버 에러입니다.');
     }
-
-    throw Error('목표 조회에 실패하였습니다.');
   };
 
   updateSelectedMonthGoalPrice = async (id: number, price: number) => {
