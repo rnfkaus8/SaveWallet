@@ -39,18 +39,26 @@ export default class GoalRepository {
     throw Error('목표 금액 수정에 실패하였습니다.');
   };
 
-  findByTargetMonth = async (targetMonth: string, memberId: number) => {
-    const axiosResponse = await axios.get<Goal>(`${Config.API_URL}/goal`, {
-      params: {
-        targetMonth,
-        memberId,
-      },
-    });
+  findByTargetMonth = async (
+    targetMonth: string,
+    memberId: number,
+  ): Promise<Goal | ErrorResponse> => {
+    try {
+      const { data } = await axios.get<Goal>(`${Config.API_URL}/goal`, {
+        params: {
+          targetMonth,
+          memberId,
+        },
+      });
 
-    if (axiosResponse.status === 200) {
-      return axiosResponse.data;
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError<ErrorResponse>(e) && e.response) {
+        const { code, message } = e.response.data;
+        return new ErrorResponse(code, message);
+      }
+
+      return new ErrorResponse('500', '서버 에러입니다.');
     }
-
-    throw Error('목표 조회에 실패하였습니다.');
   };
 }
